@@ -1,0 +1,18 @@
+Features indispensables :
+Saisie/Edition d'une nouvelle opération.
+Sauvegarde.
+Titre de l'activité d'édition d'opération
+
+Bugs :
+Quand on sélectionne plusieurs caractères dans le champ de saisie du convertisseur de devises, parfois, le clavier standard apparaît.
+TransactionsActivity, la mémorisation de la position dans la liste ne fonctionne pas au retour de l'édition d'une opération.
+Idem pour balanceHistory où les items ouverts ne sont pas mémorisés non plus.
+
+Bugs possiblement corrigés (c'était des bugs intermittents) :
+Quand le fichier distant passe de "pas de mot de passe" à "avec un mot de passe", le mot de passe est demandé deux fois.
+Quand le fichier distant repasse à sans mot de passe, puis à avec mot de passe, le mot de passe n'est pas redemandé.
+
+Améliorations :
+La sélection dans les listes avec des backgrounds de couleur alternées n'entraine pas de "hightlight" de la position sélectionné.
+Possibilité de sauvegarder le mot de passe 
+Cacher le clavier avec un btn sur le clavier.

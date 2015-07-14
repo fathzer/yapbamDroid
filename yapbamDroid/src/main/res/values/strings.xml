@@ -1,0 +1,100 @@
+<resources>
+    <string name="app_name">My Application</string>
+
+    <!-- Generic messages -->
+    <string name="PleaseWait"><![CDATA[Loading data, please wait&#8230;]]></string>
+    <string name="generic_close">Close</string>
+    <string name="generic_choose_action">Please choose an action</string>
+    <string name="generic_confirm_action">Please confirm that action</string>
+    <string name="generic_yes">Yes</string>
+    <string name="generic_no">No</string>
+    <string name="twoPointsFormat">{0} : {1}</string>
+    <!-- The following is probably a bad idea (knowing if something is male or female, depends on the language -->
+    <string name="all_male">All</string>
+
+
+    <!-- Main Activity -->
+    <string name="title_activity_main">Yapbam</string>
+    <string name="AccountTitle">My accounts</string>
+    <string name="CurrencyConverterTitle">Currency converter</string>
+
+    <!-- Currency converter -->
+    <string name="title_activity_currency_converter">CurrencyConverter</string>
+    <string name="swap">Swap</string>
+    <string name="refresh">Refresh</string>
+    <string name="currency_converter_hide_keyboard">Hide keyboard</string>
+    <string name="currency_converter_hide_refresh">Hide rates refresh date</string>
+    <string name="currency_converter_show_refresh">Show rates refresh date</string>
+    <string name="contacting_ecb">"Connecting to server&#8230;"</string>
+    <string name="rates_publish_date">Rates updated on {0}</string>
+    <string name="error_contacting_ecb">Sorry, an error occurred while contacting the server</string>
+    <string name="error_reading_rates">Sorry, an error occurred while reading rates</string>
+    <string name="error_network_required">Internet access is required to first use.</string>
+    <string name="error_no_network_available"><![CDATA[No connection is currently available.<br>Thanks to retry later.]]></string>
+
+    <!-- Connection to Dropbox -->
+    <string name="init_no_internet_dialog">An Internet connection is required to setup the application.\n Please enable your device\'s network features.</string>
+    <string name="title_activity_connect_dropbox">Dropbox connect</string>
+    <string name="ConnectDropbox_message">This application needs to connect to a Dropbox account</string>
+    <string name="ConnectDropbox_process">The button below will redirect you to Dropbox. You will have to give permission to Yapbam to access some data in your account.\nOnce this is done you will be redirected to Yapbam.</string>
+    <string name="ConnectDropbox_button">Connect</string>
+    <string name="Dropbox_deconnect">Disconnect from Dropbox account</string>
+    <string name="Connecting">Connecting to Dropbox&#133;</string>
+    <string name="ConnectedAs"><![CDATA[Connected as <b>{0}</b>]]></string>
+
+    <!-- File selection -->
+    <string name="title_activity_select_file">File selection</string>
+    <string name="SetFile">Change</string>
+    <string name="file_was_deleted">The file <b>{0}</b> has been deleted</string>
+    <string name="dataUpdateAvailable">A data update is available</string>
+    <string name="open_error">Sorry, an error occurred while reading the file</string>
+    <string name="open_unsupported"><![CDATA[Sorry, this file is not supported by this software.<br/><br/>Please note that Yapbam <b>encrypted files</b> produced by Yapbam desktop version <b>before 0.15.5</b> are not supported.]]></string>
+    <string name="open_is_password_protected">This file is password protected</string>
+    <string name="password_prompt">Please enter password</string>
+
+    <!-- Accounts -->
+    <string name="title_activity_accounts">Accounts</string>
+    <string name="account">Account</string>
+    <string name="account_detail_nbTransactions_format"><![CDATA[<b>{0}</b>\u00A0transactions.]]></string>
+    <string name="account_detail_balances_format"><![CDATA[{0}:\u00A0<b>{1}</b>. {2}:\u00A0<b>{3}</b>.<br>{4}:\u00A0<b>{5}</b>. {6}:\u00A0<b>{7}</b>.]]></string>
+    <string name="account_initial_balance">Initial\u00A0balance</string>
+    <string name="account_checked_balance">Checked\u00A0balance</string>
+    <string name="account_current_balance">Current\u00A0balance</string>
+    <string name="account_final_balance">Final\u00A0balance</string>
+    <string name="account_alert_under"><![CDATA[Alert if balance is less than {0}]]></string>
+    <string name="account_alert_over"><![CDATA[Alert if balance is more than {0}]]></string>
+    <string name="account_next_alert"><![CDATA[Next alert ({0}) on {1}]]></string>
+    <string name="account_details">Account details</string>
+    <string name="balance_history">Balance History</string>
+
+    <!-- Statements -->
+    <string name="statement_not_checked">Not checked</string>
+    <string name="statement_summary_format"><![CDATA[Start balance:&nbsp;<b>{0}</b>. End balance:&nbsp;<b>{1}</b><br>{2}&nbsp;transactions. Receipts:&nbsp;{3}, expenses:&nbsp;{4}]]></string>
+
+    <!-- Transactions -->
+    <string name="transactions_list">Transactions list and statements</string>
+    <string name="byDate">By transaction\'s date</string>
+    <string name="byValueDate">By value date</string>
+    <string name="byStatement">By statement</string>
+    <string name="alert_format">{0} ({1} {2} {3})</string>
+    <string name="title_activity_balance_history">Balance History</string>
+    <string name="balance_format"><![CDATA[Current: <b>{0}</b>, final: <b>{1}</b> ]]></string>
+    <string name="addTransaction">Add transaction</string>
+    <string name="editTransaction">Edit transaction</string>
+    <string name="deleteTransaction">Delete transaction</string>
+    <string name="confirm_delete_transaction">Do you really want to delete that transaction</string>
+    <string name="title_activity_transactions">Transactions</string>
+    <string name="no_transaction">No transaction in this account</string>
+    <string name="title_activity_transaction">TransactionActivity</string>
+    <string name="description">Description</string>
+    <string name="amount">Amount</string>
+    <string name="comment">Comment</string>
+    <string name="category">Category</string>
+    <string name="date">Date</string>
+    <string name="valueDate">Value date</string>
+    <string name="mode">Mode</string>
+    <string name="number">Number</string>
+    <string name="subtransactions">Subtransactions</string>
+    <string name="complement">Complement</string>
+
+</resources>

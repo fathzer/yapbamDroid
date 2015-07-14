@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <group android:checkableBehavior="single" >
+        <item
+            android:id="@+id/byDate"
+            android:title="@string/byDate"/>
+        <item
+            android:id="@+id/byValueDate"
+            android:title="@string/byValueDate"/>
+        <item
+            android:id="@+id/byStatement"
+            android:title="@string/byStatement"/>
+    </group>
+    <item
+        android:id="@+id/addTransaction"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="@string/addTransaction"/>
+</menu>

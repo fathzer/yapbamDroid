@@ -1,0 +1,43 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/back"
+        android:orientation="vertical"
+        tools:context=".AccountDetailActivity" >
+
+        <include layout="@layout/view_account_header" />
+
+        <TextView
+            android:id="@+id/balances"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/back_yapbam_center"
+            android:padding="5dp" />
+        
+        <TextView
+            android:id="@+id/alerts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/back_yapbam_center"
+            android:padding="5dp" />
+        
+        <TextView
+            android:id="@+id/comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/back_yapbam_center"
+            android:padding="5dp" />
+
+    </LinearLayout>
+
+</FrameLayout>

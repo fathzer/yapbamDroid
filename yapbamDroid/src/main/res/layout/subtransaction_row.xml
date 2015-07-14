@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <TextView
+        android:id="@+id/description"
+        android:text="Description"
+        style="@style/tableElement.cell" />
+
+    <TextView
+        android:id="@+id/category"
+        android:text="Category"
+        style="@style/tableElement.cell" />
+
+    <TextView
+        android:id="@+id/amount"
+        android:text="Amount"
+        style="@style/tableElement.cell" />
+
+</TableRow>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="net.yapbam.android" >
+
+    <uses-sdk
+        android:minSdkVersion="10"
+        android:targetSdkVersion="22" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <application
+        android:name="net.yapbam.android.Yapbam"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_yapbam_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="net.yapbam.android.YapbamActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/generalNoTitle" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="net.yapbam.android.ConnectDropboxActivity"
+            android:label="@string/title_activity_connect_dropbox" >
+        </activity>
+        <activity
+            android:name="net.yapbam.android.AccountsActivity"
+            android:label="@string/title_activity_accounts" >
+        </activity>
+        <activity
+            android:name="net.yapbam.android.converter.CurrencyConverterActivity"
+            android:label="@string/title_activity_currency_converter" >
+        </activity>
+        <activity android:name="com.dropbox.sync.android.DbxAuthActivity" />
+        <activity
+            android:name="com.dropbox.client2.android.AuthActivity"
+            android:launchMode="singleTask" >
+            <intent-filter>
+                <data android:scheme="db-6iee8hc1r12pbj8" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name="com.dropbox.sync.android.DbxSyncService"
+            android:enabled="true"
+            android:exported="false"
+            android:label="Dropbox Sync" />
+
+        <activity
+            android:name="net.yapbam.android.SelectFileActivity"
+            android:label="@string/title_activity_select_file" >
+        </activity>
+        <activity
+            android:name="net.yapbam.android.transaction.TransactionsActivity"
+            android:label="@string/title_activity_transactions" >
+        </activity>
+        <activity
+            android:name="net.yapbam.android.transaction.TransactionActivity"
+            android:label="@string/title_activity_transaction" >
+        </activity>
+        <activity
+            android:name="net.yapbam.android.transaction.NewTransactionActivity"
+            >
+        </activity>
+        <activity
+            android:name="net.yapbam.android.AccountDetailActivity"
+            android:label="@string/account_details" >
+        </activity>
+        <activity
+            android:name="net.yapbam.android.balancehistory.BalanceHistoryActivity"
+            android:label="@string/title_activity_balance_history" >
+        </activity>
+    </application>
+
+</manifest>

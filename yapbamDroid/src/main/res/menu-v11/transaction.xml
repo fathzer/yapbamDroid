@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item
+        android:id="@+id/editTransaction"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:showAsAction="ifRoom"
+        android:title="@string/editTransaction"/>
+    <item
+        android:id="@+id/deleteTransaction"
+        android:showAsAction="ifRoom"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="@string/deleteTransaction"/>
+</menu>

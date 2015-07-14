@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="listViewOddBkg">#FAFDFA</color>
+    <color name="listViewEvenBkg">#FFF</color>
+    <color name="listBalanceHistoryAlertBkg">#D88</color>
+    <color name="listBalanceHistoryTransactionBkg">#66AA66</color>
+</resources>
