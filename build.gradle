@@ -17,5 +17,8 @@ allprojects {
         jcenter()
 	/* yapbam-commons maven artifact is not published, you should install it in your own repository */
         maven { url System.getenv('HOME') + "/.m2/repository/" }
+        maven {
+            url 'https://dl.bintray.com/fathzer/maven'
+        }
     }
 }

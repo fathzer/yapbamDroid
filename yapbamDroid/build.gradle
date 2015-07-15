@@ -43,9 +43,9 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-//    compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.android.support:support-v4:22+'
     compile 'com.fathzer:yapbam-commons:1.4.5'
+    compile 'com.fathzer.android:keyboard:0.0.1'
     compile project(':rangeSeekBar')
     compile 'org.slf4j:slf4j-android:1.7.12'
     compile files('libs/bugsense-3.6.jar')
