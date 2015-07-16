@@ -1,8 +1,5 @@
 apply plugin: 'com.android.application'
 
-//def storePassword = "gti9220"
-//println sign.storePassword
-
 android {
     compileSdkVersion 22
     buildToolsVersion "21.1.2"
@@ -46,7 +43,8 @@ dependencies {
     compile 'com.android.support:support-v4:22+'
     compile 'com.fathzer:yapbam-commons:1.4.5'
     compile 'com.fathzer.android:keyboard:0.0.1'
-    compile project(':rangeSeekBar')
+    compile 'com.fathzer.android:multispinner:0.0.1'
+    compile 'com.fathzer.android:seekbar:0.0.1'
     compile 'org.slf4j:slf4j-android:1.7.12'
     compile files('libs/bugsense-3.6.jar')
     compile files('libs/dropbox-sync-sdk-android.jar')

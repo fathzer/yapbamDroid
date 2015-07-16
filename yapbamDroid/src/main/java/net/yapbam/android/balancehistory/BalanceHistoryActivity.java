@@ -8,10 +8,10 @@ import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.TextView;
 
-import com.fathzer.android.MultiSpinner;
-import com.fathzer.android.MultiSpinner.MultiSpinnerListener;
-import com.fathzer.android.RangeSeekBar;
-import com.fathzer.android.RangeSeekBar.OnRangeSeekBarChangeListener;
+import com.fathzer.android.spinner.MultiSpinner;
+import com.fathzer.android.spinner.MultiSpinner.MultiSpinnerListener;
+import com.fathzer.android.seekbar.RangeSeekBar;
+import com.fathzer.android.seekbar.RangeSeekBar.OnRangeSeekBarChangeListener;
 
 import net.yapbam.android.R;
 import net.yapbam.android.AbstractYapbamActivity;

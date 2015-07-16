@@ -1,7 +1,0 @@
-<resources>
-
-    <string name="app_name">RangeSeekBar</string>
-    <string name="multi_splinner_dialog_title">Make your choice</string>
-    <string name="multi_splinner_dialog_select_all">All</string>
-    
-</resources>

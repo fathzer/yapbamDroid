@@ -1,1 +1,1 @@
-include ':yapbamDroid', ':rangeSeekBar'
+include ':yapbamDroid'

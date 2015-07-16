@@ -71,6 +71,8 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/dex-cache" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.fathzer.android/keyboard/0.0.1/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.fathzer.android/multispinner/0.0.1/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.fathzer.android/seekbar/0.0.1/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jacoco" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/javaResources" />
@@ -96,7 +98,8 @@
     <orderEntry type="library" exported="" name="yapbam-commons-1.4.5" level="project" />
     <orderEntry type="library" exported="" name="slf4j-android-1.7.12" level="project" />
     <orderEntry type="library" exported="" name="slf4j-api-1.7.12" level="project" />
+    <orderEntry type="library" exported="" name="multispinner-0.0.1" level="project" />
+    <orderEntry type="library" exported="" name="seekbar-0.0.1" level="project" />
     <orderEntry type="library" exported="" name="bugsense-3.6" level="project" />
-    <orderEntry type="module" module-name="rangeSeekBar" exported="" />
   </component>
 </module>
