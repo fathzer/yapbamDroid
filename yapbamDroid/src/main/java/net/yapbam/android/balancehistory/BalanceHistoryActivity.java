@@ -2,6 +2,7 @@ package net.yapbam.android.balancehistory;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
@@ -57,9 +58,9 @@ public class BalanceHistoryActivity extends AbstractYapbamActivity {
 				logger.trace("Setting account to {}",Arrays.toString(selectedNames));
 				BalanceHistoryActivity.this.accountNames = selectedNames;
 				history = build(Yapbam.getDataManager().getData());
-				seekBar.setNormalizedMinValue(0);
-				seekBar.setNormalizedMaxValue(1.0);
-				dateRangeUpdated(0f, 1.0f);
+				Log.i("BalanceHistory", "from "+history.get(0).getFrom().toString()); //TODO
+				Log.i("BalanceHistory", "to "+history.get(history.size()-1).getTo().toString()); //TODO
+//Change range date seekbar settings				dateRangeUpdated(0f, 1.0f);
 			}
 		}
 	}
@@ -67,7 +68,7 @@ public class BalanceHistoryActivity extends AbstractYapbamActivity {
 	private String[] accountNames;
 	private BalanceHistory history;
 	private AlertThreshold alertThreshold;
-	private RangeSeekBar<Float> seekBar;
+	private RangeSeekBar seekBar;
 	private MultiSpinner spinner;
 	private boolean spinnerActivated;
 	private Logger logger = LoggerFactory.getLogger(getClass());
@@ -77,18 +78,15 @@ public class BalanceHistoryActivity extends AbstractYapbamActivity {
 		super.onCreate(savedInstanceState, R.layout.activity_balance_history);
 		// Add the date range seek bar 
 		ViewGroup layout = (ViewGroup) findViewById(R.id.bottomLayout);
-		seekBar = new RangeSeekBar<Float>(0.0f, 1.0f, this);
-		// Allow the bar state to be saved when device orientation changes
-		seekBar.setId(1);
-		seekBar.setOnRangeSeekBarChangeListener(new OnRangeSeekBarChangeListener<Float>() {
+		seekBar = (RangeSeekBar) findViewById(R.id.seekBar);
+		seekBar.setOnRangeSeekBarChangeListener(new OnRangeSeekBarChangeListener() {
 			@Override
-			public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Float minValue, Float maxValue) {
+			public void onRangeSeekBarValuesChanged(RangeSeekBar bar, int minValue, int maxValue) {
 				// handle changed range values
-				logger.trace("User selected new range values: MIN={}, MAX=",minValue, maxValue);
+				logger.trace("User selected new range values: MIN={}, MAX=", minValue, maxValue);
 				dateRangeUpdated(minValue, maxValue);
 			}
 		});
-		layout.addView(seekBar);
 		spinner = (MultiSpinner)findViewById(R.id.spinner);
 		spinner.setDialogTitle(getString(R.string.account));
 		spinner.setSelectAllText(getString(R.string.all_male));
@@ -178,7 +176,7 @@ public class BalanceHistoryActivity extends AbstractYapbamActivity {
 	}
 	
 	private static final double MILLIS_PER_DAY = 24 * 3600 * 1000;
-	private void dateRangeUpdated(float minValue, float maxValue) {
+	private void dateRangeUpdated(int minValue, int maxValue) {
 		logger.trace("dateRangeUpdated {}-{}", minValue, maxValue);
 		TextView commentView = (TextView) findViewById(R.id.dateRange);
 		String comment = null;
@@ -187,16 +185,15 @@ public class BalanceHistoryActivity extends AbstractYapbamActivity {
 		if (history.size()<=1) {
 			comment = "This account contains no transaction";
 		} else if (history.size()>2) {
+			int dayDistance = getDayDistance(history);
 			Date start = history.get(0).getTo();
-			Date end = history.get(history.size()-1).getFrom();
-			int dayDistance = (int) Math.round((end.getTime()-start.getTime()) / MILLIS_PER_DAY);
 			Calendar c = Calendar.getInstance();
 			c.setTime(start);
-			c.add(Calendar.DAY_OF_MONTH, (int) (minValue * dayDistance));
+			c.add(Calendar.DATE, minValue);
 			dFrom = c.getTime();
 			c = Calendar.getInstance();
-			c.setTime(end);
-			c.add(Calendar.DAY_OF_MONTH, -(int)((1.0f-maxValue)*dayDistance));
+			c.setTime(start);
+			c.add(Calendar.DATE, maxValue);
 			dTo = c.getTime();
 			comment = MessageFormat.format("From {0} to {1}", Yapbam.formatShort(dFrom), Yapbam.formatShort(dTo));
 		}
@@ -211,7 +208,13 @@ public class BalanceHistoryActivity extends AbstractYapbamActivity {
 		ExpandableListView tv = (ExpandableListView)findViewById(R.id.balanceHistory);
 		tv.setAdapter(new BalanceHistoryElementAdapter(history, alertThreshold, dFrom, dTo));
 	}
-	
+
+	private int getDayDistance(BalanceHistory history) {
+		Date start = history.get(0).getTo();
+		Date end = history.get(history.size()-1).getFrom();
+		return (int) Math.round((end.getTime()-start.getTime()) / MILLIS_PER_DAY);
+	}
+
 	@Override
 	protected ViewGroup getMainViewGroup() {
 		return (ViewGroup) findViewById(R.id.frameLayout);

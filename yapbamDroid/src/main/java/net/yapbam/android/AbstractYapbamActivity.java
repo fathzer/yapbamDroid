@@ -34,8 +34,7 @@ public abstract class AbstractYapbamActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState, int layoutId) {
 		super.onCreate(savedInstanceState);
 		setContentView(layoutId);
-		getLayoutInflater().inflate(R.layout.view_data_management,
-				getMainViewGroup());
+		getLayoutInflater().inflate(R.layout.view_data_management, getMainViewGroup());
 		this.dataManager = Yapbam.getDataManager();
 		this.logger = LoggerFactory.getLogger(getClass());
 	}
