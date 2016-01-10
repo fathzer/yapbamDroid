@@ -48,6 +48,36 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No limit"
+                    android:id="@+id/from"
+                    android:longClickable="true"
+                    android:onClick="selectFrom" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="to"
+                    android:id="@+id/arrow"
+                    android:layout_weight="1"
+                    android:gravity="center" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No limit"
+                    android:id="@+id/to"
+                    android:onClick="selectTo"
+                    android:longClickable="true" />
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/dateRange"
                 android:layout_width="match_parent"

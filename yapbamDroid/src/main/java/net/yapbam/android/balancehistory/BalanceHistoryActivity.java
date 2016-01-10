@@ -1,13 +1,18 @@
 package net.yapbam.android.balancehistory;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fathzer.android.spinner.MultiSpinner;
 import com.fathzer.android.spinner.MultiSpinner.MultiSpinnerListener;
@@ -35,18 +40,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class BalanceHistoryActivity extends AbstractYapbamActivity {
 	private static final String ACCOUNT_NAMES_KEY = "accountNames";
-	
+	public static final String DATE_PICKER = "datePicker";
+
 	private final class SpinnerListener implements MultiSpinnerListener {
 		@Override
 		public void onItemsSelected(boolean[] selected) {
 			if (!spinnerActivated) {
 				return;
 			}
-			List<String> listAccountNames = new ArrayList<String>();
+			List<String> listAccountNames = new ArrayList<>();
 			for (int i = 0; i < selected.length; i++) {
 				if (selected[i]) {
 					listAccountNames.add(spinner.getItems().get(i));
@@ -107,7 +114,20 @@ public class BalanceHistoryActivity extends AbstractYapbamActivity {
                 return true;
             }
         });
-
+		findViewById(R.id.from).setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				Toast.makeText(v.getContext(), "long on From", Toast.LENGTH_SHORT).show();
+				return true;
+			}
+		});
+		findViewById(R.id.to).setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				Toast.makeText(v.getContext(), "long on To", Toast.LENGTH_SHORT).show();
+				return true;
+			}
+		});
 	}
 
 	private BalanceHistory build(GlobalData data) {
@@ -121,7 +141,7 @@ public class BalanceHistoryActivity extends AbstractYapbamActivity {
 		} else {
 			FilteredData fData = new FilteredData(data);
 			Filter filter = fData.getFilter();
-			List<Account> accounts = new ArrayList<Account>(accountNames.length);
+			List<Account> accounts = new ArrayList<>(accountNames.length);
 			for (int i = 0; i < accountNames.length; i++) {
 				Account account = data.getAccount(accountNames[i]);
 				if (account==null) {
@@ -212,7 +232,7 @@ public class BalanceHistoryActivity extends AbstractYapbamActivity {
 	private int getDayDistance(BalanceHistory history) {
 		Date start = history.get(0).getTo();
 		Date end = history.get(history.size()-1).getFrom();
-		return (int) Math.round((end.getTime()-start.getTime()) / MILLIS_PER_DAY);
+		return (int) Math.round((end.getTime() - start.getTime()) / MILLIS_PER_DAY);
 	}
 
 	@Override
@@ -223,5 +243,61 @@ public class BalanceHistoryActivity extends AbstractYapbamActivity {
 	@Override
 	protected View getContentView() {
 		return findViewById(R.id.mainLayout);
+	}
+
+	public void selectTo(View view) {
+		DatePickerFragment dialog = new ToPicker();
+		dialog.setDate(new GregorianCalendar(2016,2,15)); //TODO
+		dialog.show(getFragmentManager(), DATE_PICKER);
+	}
+
+	public void selectFrom(View view) {
+		DatePickerFragment dialog = new FromPicker();
+		dialog.setDate(new GregorianCalendar(2010,0,1)); //TODO
+		dialog.show(getFragmentManager(), DATE_PICKER);
+	}
+
+	public abstract static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+		private static final String INIT_DATE_KEY = "dateKey";
+
+		public void setDate(Calendar date) {
+			//Pass the date in a bundle.
+			Bundle bundle = new Bundle();
+			bundle.putSerializable(INIT_DATE_KEY, date);
+			setArguments(bundle);
+		}
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			super.onCreateDialog(savedInstanceState);
+			Calendar initialDate = (Calendar) getArguments().getSerializable(INIT_DATE_KEY);
+			if (initialDate==null) {
+				initialDate = Calendar.getInstance();
+				initialDate.set(Calendar.HOUR_OF_DAY, 0);
+				initialDate.set(Calendar.MINUTE, 0);
+				initialDate.set(Calendar.SECOND, 0);
+			}
+			return new DatePickerDialog(getActivity(), this, initialDate.get(Calendar.YEAR), initialDate.get(Calendar.MONTH), initialDate.get(Calendar.DATE));
+		}
+	}
+
+	public static class FromPicker extends DatePickerFragment {
+		@Override
+		public void onDateSet(DatePicker view, int year, int month, int day) {
+			Calendar result = new GregorianCalendar();
+			result.set(year, month, day, 0, 0, 0);
+			((TextView)getActivity().findViewById(R.id.from)).setText(result.getTime().toString());
+			//TODO
+		}
+	}
+
+	public static class ToPicker extends DatePickerFragment {
+		@Override
+		public void onDateSet(DatePicker view, int year, int month, int day) {
+			Calendar result = new GregorianCalendar();
+			result.set(year, month, day, 0, 0, 0);
+			((TextView)getActivity().findViewById(R.id.to)).setText(result.getTime().toString());
+			//TODO
+		}
 	}
 }
