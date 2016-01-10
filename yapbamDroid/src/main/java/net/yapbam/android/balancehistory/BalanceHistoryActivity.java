@@ -1,8 +1,5 @@
 package net.yapbam.android.balancehistory;
 
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,13 +13,12 @@ import android.widget.Toast;
 
 import com.fathzer.android.spinner.MultiSpinner;
 import com.fathzer.android.spinner.MultiSpinner.MultiSpinnerListener;
-import com.fathzer.android.seekbar.RangeSeekBar;
-import com.fathzer.android.seekbar.RangeSeekBar.OnRangeSeekBarChangeListener;
 
 import net.yapbam.android.R;
 import net.yapbam.android.AbstractYapbamActivity;
 import net.yapbam.android.Yapbam;
 import net.yapbam.android.datamanager.DataManager.State;
+import net.yapbam.android.date.DatePickerFragment;
 import net.yapbam.android.transaction.TransactionActivity;
 import net.yapbam.data.Account;
 import net.yapbam.data.AlertThreshold;
@@ -65,9 +61,11 @@ public class BalanceHistoryActivity extends AbstractYapbamActivity {
 				logger.trace("Setting account to {}",Arrays.toString(selectedNames));
 				BalanceHistoryActivity.this.accountNames = selectedNames;
 				history = build(Yapbam.getDataManager().getData());
-				Log.i("BalanceHistory", "from "+history.get(0).getFrom().toString()); //TODO
-				Log.i("BalanceHistory", "to "+history.get(history.size()-1).getTo().toString()); //TODO
-//Change range date seekbar settings				dateRangeUpdated(0f, 1.0f);
+				Date hFrom = history.get(0).getTo();
+				Date hTo = history.get(history.size()-1).getFrom();
+				Log.i("BalanceHistory", "from "+hFrom); //TODO
+				Log.i("BalanceHistory", "to "+hTo); //TODO
+				dateRangeUpdated();
 			}
 		}
 	}
@@ -75,25 +73,17 @@ public class BalanceHistoryActivity extends AbstractYapbamActivity {
 	private String[] accountNames;
 	private BalanceHistory history;
 	private AlertThreshold alertThreshold;
-	private RangeSeekBar seekBar;
 	private MultiSpinner spinner;
 	private boolean spinnerActivated;
 	private Logger logger = LoggerFactory.getLogger(getClass());
+	private Date minDate;
+	private Date maxDate;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState, R.layout.activity_balance_history);
 		// Add the date range seek bar 
 		ViewGroup layout = (ViewGroup) findViewById(R.id.bottomLayout);
-		seekBar = (RangeSeekBar) findViewById(R.id.seekBar);
-		seekBar.setOnRangeSeekBarChangeListener(new OnRangeSeekBarChangeListener() {
-			@Override
-			public void onRangeSeekBarValuesChanged(RangeSeekBar bar, int minValue, int maxValue) {
-				// handle changed range values
-				logger.trace("User selected new range values: MIN={}, MAX=", minValue, maxValue);
-				dateRangeUpdated(minValue, maxValue);
-			}
-		});
 		spinner = (MultiSpinner)findViewById(R.id.spinner);
 		spinner.setDialogTitle(getString(R.string.account));
 		spinner.setSelectAllText(getString(R.string.all_male));
@@ -117,14 +107,16 @@ public class BalanceHistoryActivity extends AbstractYapbamActivity {
 		findViewById(R.id.from).setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
-				Toast.makeText(v.getContext(), "long on From", Toast.LENGTH_SHORT).show();
+				minDate = null;
+				dateRangeUpdated();
 				return true;
 			}
 		});
 		findViewById(R.id.to).setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
-				Toast.makeText(v.getContext(), "long on To", Toast.LENGTH_SHORT).show();
+				maxDate = null;
+				dateRangeUpdated();
 				return true;
 			}
 		});
@@ -183,7 +175,7 @@ public class BalanceHistoryActivity extends AbstractYapbamActivity {
 				spinnerActivated = true;
 				spinner.setSelected(selected);
 			}
-			dateRangeUpdated(seekBar.getSelectedMinValue(), seekBar.getSelectedMaxValue());
+			dateRangeUpdated();
 			accountNameView.setVisibility(data.getAccountsNumber()==1?View.VISIBLE:View.GONE);
 			spinner.setVisibility(data.getAccountsNumber()>1?View.VISIBLE:View.GONE);
 		}
@@ -193,46 +185,34 @@ public class BalanceHistoryActivity extends AbstractYapbamActivity {
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putCharSequenceArray(ACCOUNT_NAMES_KEY, accountNames);
+		//TODO Set the from/to dates
 	}
 	
-	private static final double MILLIS_PER_DAY = 24 * 3600 * 1000;
-	private void dateRangeUpdated(int minValue, int maxValue) {
-		logger.trace("dateRangeUpdated {}-{}", minValue, maxValue);
+	private void dateRangeUpdated() {
+		logger.trace("dateRangeUpdated {}-{}", minDate, maxDate);
 		TextView commentView = (TextView) findViewById(R.id.dateRange);
 		String comment = null;
-		Date dFrom = null;
-		Date dTo = null;
 		if (history.size()<=1) {
 			comment = "This account contains no transaction";
 		} else if (history.size()>2) {
-			int dayDistance = getDayDistance(history);
-			Date start = history.get(0).getTo();
-			Calendar c = Calendar.getInstance();
-			c.setTime(start);
-			c.add(Calendar.DATE, minValue);
-			dFrom = c.getTime();
-			c = Calendar.getInstance();
-			c.setTime(start);
-			c.add(Calendar.DATE, maxValue);
-			dTo = c.getTime();
-			comment = MessageFormat.format("From {0} to {1}", Yapbam.formatShort(dFrom), Yapbam.formatShort(dTo));
+			final Date min = minDate==null?history.get(0).getTo():minDate;
+			final Date max = maxDate==null?history.get(history.size()-1).getFrom():maxDate;
+			((TextView) findViewById(R.id.from)).setText(Yapbam.formatShort(min));
+			((TextView) findViewById(R.id.to)).setText(Yapbam.formatShort(max));
+//			comment = MessageFormat.format("From {0} to {1}", Yapbam.formatShort(min), Yapbam.formatShort(max));
 		}
 		if (comment!=null) {
 			commentView.setText(comment);
 			commentView.setVisibility(View.VISIBLE);
+			findViewById(R.id.dateSettings).setVisibility(View.GONE);
 		} else {
 			commentView.setVisibility(View.GONE);
+			findViewById(R.id.dateSettings).setVisibility(View.VISIBLE);
 		}
 		
 		// Setup the list
 		ExpandableListView tv = (ExpandableListView)findViewById(R.id.balanceHistory);
-		tv.setAdapter(new BalanceHistoryElementAdapter(history, alertThreshold, dFrom, dTo));
-	}
-
-	private int getDayDistance(BalanceHistory history) {
-		Date start = history.get(0).getTo();
-		Date end = history.get(history.size()-1).getFrom();
-		return (int) Math.round((end.getTime() - start.getTime()) / MILLIS_PER_DAY);
+		tv.setAdapter(new BalanceHistoryElementAdapter(history, alertThreshold, minDate, maxDate));
 	}
 
 	@Override
@@ -244,40 +224,36 @@ public class BalanceHistoryActivity extends AbstractYapbamActivity {
 	protected View getContentView() {
 		return findViewById(R.id.mainLayout);
 	}
+	public void selectFrom(View view) {
+		DatePickerFragment dialog = new FromPicker();
+		setUpDatePicker(dialog);
+		if (minDate!=null) {
+			final Calendar cal = Calendar.getInstance();
+			cal.setTime(minDate);
+			dialog.setDate(cal);
+		}
+		dialog.show(getFragmentManager(), DATE_PICKER);
+	}
 
 	public void selectTo(View view) {
 		DatePickerFragment dialog = new ToPicker();
-		dialog.setDate(new GregorianCalendar(2016,2,15)); //TODO
-		dialog.show(getFragmentManager(), DATE_PICKER);
-	}
-
-	public void selectFrom(View view) {
-		DatePickerFragment dialog = new FromPicker();
-		dialog.setDate(new GregorianCalendar(2010,0,1)); //TODO
-		dialog.show(getFragmentManager(), DATE_PICKER);
-	}
-
-	public abstract static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
-		private static final String INIT_DATE_KEY = "dateKey";
-
-		public void setDate(Calendar date) {
-			//Pass the date in a bundle.
-			Bundle bundle = new Bundle();
-			bundle.putSerializable(INIT_DATE_KEY, date);
-			setArguments(bundle);
+		setUpDatePicker(dialog);
+		if (maxDate!=null) {
+			final Calendar cal = Calendar.getInstance();
+			cal.setTime(maxDate);
+			dialog.setDate(cal);
 		}
+		dialog.show(getFragmentManager(), DATE_PICKER);
+	}
 
-		@Override
-		public Dialog onCreateDialog(Bundle savedInstanceState) {
-			super.onCreateDialog(savedInstanceState);
-			Calendar initialDate = (Calendar) getArguments().getSerializable(INIT_DATE_KEY);
-			if (initialDate==null) {
-				initialDate = Calendar.getInstance();
-				initialDate.set(Calendar.HOUR_OF_DAY, 0);
-				initialDate.set(Calendar.MINUTE, 0);
-				initialDate.set(Calendar.SECOND, 0);
-			}
-			return new DatePickerDialog(getActivity(), this, initialDate.get(Calendar.YEAR), initialDate.get(Calendar.MONTH), initialDate.get(Calendar.DATE));
+	private void setUpDatePicker(DatePickerFragment dp) {
+		if (history.size()>0) {
+			Calendar min = Calendar.getInstance();
+			min.setTime(history.get(0).getTo());
+			dp.setMinDate(min);
+			Calendar max = Calendar.getInstance();
+			max.setTime(history.get(history.size()-1).getFrom());
+			dp.setMaxDate(max);
 		}
 	}
 
@@ -286,8 +262,9 @@ public class BalanceHistoryActivity extends AbstractYapbamActivity {
 		public void onDateSet(DatePicker view, int year, int month, int day) {
 			Calendar result = new GregorianCalendar();
 			result.set(year, month, day, 0, 0, 0);
-			((TextView)getActivity().findViewById(R.id.from)).setText(result.getTime().toString());
-			//TODO
+			BalanceHistoryActivity activity = (BalanceHistoryActivity) getActivity();
+			activity.minDate = result.getTime();
+			activity.dateRangeUpdated();
 		}
 	}
 
@@ -296,8 +273,9 @@ public class BalanceHistoryActivity extends AbstractYapbamActivity {
 		public void onDateSet(DatePicker view, int year, int month, int day) {
 			Calendar result = new GregorianCalendar();
 			result.set(year, month, day, 0, 0, 0);
-			((TextView)getActivity().findViewById(R.id.to)).setText(result.getTime().toString());
-			//TODO
+			BalanceHistoryActivity activity = (BalanceHistoryActivity) getActivity();
+			activity.maxDate = result.getTime();
+			activity.dateRangeUpdated();
 		}
 	}
 }

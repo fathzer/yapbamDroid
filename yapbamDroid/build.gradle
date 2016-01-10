@@ -44,7 +44,6 @@ dependencies {
     compile 'com.fathzer:yapbam-commons:1.7.0'
     compile 'com.fathzer.android:keyboard:0.0.1'
     compile 'com.fathzer.android:multispinner:0.0.1'
-    compile 'com.fathzer.android:seekbar:0.0.4'
     compile 'org.slf4j:slf4j-android:1.7.12'
     compile files('libs/bugsense-3.6.jar')
     compile files('libs/dropbox-sync-sdk-android.jar')

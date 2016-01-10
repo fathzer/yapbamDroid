@@ -51,7 +51,8 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:id="@+id/dateSettings">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -83,14 +84,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp" />
-
-            <com.fathzer.android.seekbar.RangeSeekBar
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/seekBar"
-                android:max="100"
-                android:progress="10"
-                android:layout_gravity="center_vertical" />
         </LinearLayout>
 
         <ExpandableListView
