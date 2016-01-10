@@ -26,7 +26,7 @@
     <string name="generic_close">Fermer</string>
     <string name="title_activity_accounts">Comptes</string>
     <string name="title_activity_currency_converter">Convertisseur de devises</string>
-    <string name="SetFile">Changer</string>
+    <string name="setFile">Changer</string>
     <string name="title_activity_select_file">Sélection de fichier</string>
     <string name="file_was_deleted">Le fichier <b>{0}</b> a été supprimé</string>
     <string name="dataUpdateAvailable">Une mise à jour des données est disponible</string>

@@ -2,6 +2,9 @@ package net.yapbam.android;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -78,7 +81,23 @@ public class AccountsActivity extends AbstractYapbamActivity {
 			selectFile(this.getCurrentFocus());
 		}
 	}
-	
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.accounts, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int itemId = item.getItemId();
+		if (itemId == R.id.selectFile) {
+			startActivityForResult(new Intent(this, SelectFileActivity.class), SelectFileActivity.SELECT_FILE_REQUEST);
+		}
+		return true;
+	}
+
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		LOGGER.trace("onActivityResult is called. RequestCode = {}, resultCode = {}", requestCode, resultCode); //NON-NLS
 		if ((requestCode == SelectFileActivity.SELECT_FILE_REQUEST) && (getSelectedFile()==null)) {

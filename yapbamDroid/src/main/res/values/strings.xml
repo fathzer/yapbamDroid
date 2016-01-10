@@ -44,7 +44,7 @@
 
     <!-- File selection -->
     <string name="title_activity_select_file">File selection</string>
-    <string name="SetFile">Change</string>
+    <string name="setFile">Change</string>
     <string name="file_was_deleted">The file <b>{0}</b> has been deleted</string>
     <string name="dataUpdateAvailable">A data update is available</string>
     <string name="open_error">Sorry, an error occurred while reading the file</string>
