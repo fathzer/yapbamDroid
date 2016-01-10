@@ -8,8 +8,8 @@ android {
         applicationId "net.astesana.yapbam.android"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 7
-        versionName "0.0.9-alpha"
+        versionCode 9
+        versionName "0.0.11-alpha"
     }
     final def configs = signingConfigs {
         /* WARNING, the file signing.properties, in the same folder than this script should contains the following lines
@@ -40,7 +40,6 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:support-v4:22+'
     compile 'com.fathzer:yapbam-commons:1.7.0'
     compile 'com.fathzer.android:keyboard:0.0.1'
     compile 'com.fathzer.android:multispinner:0.0.1'
