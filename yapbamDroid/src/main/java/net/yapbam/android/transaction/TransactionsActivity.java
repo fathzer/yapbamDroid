@@ -144,8 +144,7 @@ public class TransactionsActivity extends AbstractYapbamActivity {
 	/** Sets the list adapter accordingly to the currently selected year.
 	 */
 	public void setListAdapter() {
-		logger.trace("Entering setListAdapter with pageIndex={}",pageIndex);
-		
+		logger.trace("Entering setListAdapter with pageIndex={}",pageIndex); //NON-NLS
 		if (splitter.shouldBeSplit()) {
 			int pageCount = splitter.getPageCount();
 			if ((pageIndex<0) || (pageIndex>pageCount)) {

@@ -8,9 +8,9 @@ import android.os.Bundle;
 import java.util.Calendar;
 
 public abstract class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
-    private static final String INIT_DATE_KEY = "date";
-    private static final String MIN_DATE_KEY = "minDate";
-    private static final String MAX_DATE_KEY = "maxDate";
+    private static final String INIT_DATE_KEY = "date"; //NON-NLS
+    private static final String MIN_DATE_KEY = "minDate"; //NON-NLS
+    private static final String MAX_DATE_KEY = "maxDate"; //NON-NLS
 
     public void setDate(Calendar date) {
         getBundle().putSerializable(INIT_DATE_KEY, date);
@@ -39,9 +39,6 @@ public abstract class DatePickerFragment extends DialogFragment implements DateP
         Calendar initialDate = (Calendar) getArguments().getSerializable(INIT_DATE_KEY);
         if (initialDate==null) {
             initialDate = Calendar.getInstance();
-//            initialDate.set(Calendar.HOUR_OF_DAY, 0);
-//            initialDate.set(Calendar.MINUTE, 0);
-//            initialDate.set(Calendar.SECOND, 0);
         }
         final DatePickerDialog dialog = new DatePickerDialog(getActivity(), this, initialDate.get(Calendar.YEAR), initialDate.get(Calendar.MONTH), initialDate.get(Calendar.DATE));
         Calendar min = (Calendar) getArguments().getSerializable(MIN_DATE_KEY);

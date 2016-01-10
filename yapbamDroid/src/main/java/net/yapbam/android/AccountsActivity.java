@@ -73,18 +73,16 @@ public class AccountsActivity extends AbstractYapbamActivity {
 
 	@Override
 	protected void onResume() {
-		LOGGER.trace("onResume");
 		super.onResume();
 		if (getSelectedFile()==null) {
-			LOGGER.trace("no file selected => call selectFile");
 			selectFile(this.getCurrentFocus());
 		}
 	}
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		LOGGER.trace("onActivityResult is called. RequestCode = {}, resultCode = {}", requestCode, resultCode);
+		LOGGER.trace("onActivityResult is called. RequestCode = {}, resultCode = {}", requestCode, resultCode); //NON-NLS
 		if ((requestCode == SelectFileActivity.SELECT_FILE_REQUEST) && (getSelectedFile()==null)) {
-			LOGGER.trace("no file selected => call finish");
+			LOGGER.trace("no file selected => call finish"); //NON-NLS
 			finish();
 		}
 	}

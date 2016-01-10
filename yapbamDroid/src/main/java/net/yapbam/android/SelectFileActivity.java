@@ -48,7 +48,7 @@ public class SelectFileActivity extends Activity {
 		accountListener = new DbxAccount.Listener() {
 			@Override
 			public void onAccountChange(DbxAccount acct) {
-				LOGGER.trace("onAccountChange is called");
+				LOGGER.trace("onAccountChange is called"); //NON-NLS
 				updateAccount();
 			}
 		};
@@ -75,13 +75,13 @@ public class SelectFileActivity extends Activity {
 		try {
 			return DbxFileSystem.forAccount(Yapbam.getDropboxManager().getLinkedAccount());
 		} catch (Unauthorized e) {
-			LOGGER.warn("No Dropbox file system", e);
+			LOGGER.warn("No Dropbox file system", e); //NON-NLS
 			return null;
 		}
 	}
 	
 	private void updateAccount() {
-		LOGGER.trace("updateAccount is called");
+		LOGGER.trace("updateAccount is called"); //NON-NLS
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -100,7 +100,7 @@ public class SelectFileActivity extends Activity {
 	}
 	
 	private void updateList() {
-		LOGGER.trace("updateList is called");
+		LOGGER.trace("updateList is called"); //NON-NLS
 		final DbxFileSystem fs = getFileSystem();
 		new Thread(new Runnable() {
 			@Override
@@ -114,7 +114,7 @@ public class SelectFileActivity extends Activity {
 						}
 					});
 				} catch (DbxException e) {
-					LOGGER.error("Error while getting file list", e);
+					LOGGER.error("Error while getting file list", e); //NON-NLS
 				}
 			}
 		}).start();

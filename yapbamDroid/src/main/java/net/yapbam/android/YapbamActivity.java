@@ -33,7 +33,7 @@ public class YapbamActivity extends Activity {
 			@Override
 			public void update(Observable observable, Object data) {
 				if (FileState.UPDATE_AVAILABLE.equals(data)) {
-					LOGGER.trace("refresh data on {} update", observable);
+					LOGGER.trace("refresh data on {} update", observable); //NON-NLS
 //					Yapbam.getDataManager().refreshData();
 				}
 			}
@@ -43,7 +43,7 @@ public class YapbamActivity extends Activity {
 
 	public void doTest(View view) {
 		// This button is a place to make tests
-		Toast.makeText(this, "This is an empty test button", Toast.LENGTH_LONG).show();
+		Toast.makeText(this, "This is an empty test button", Toast.LENGTH_LONG).show(); //NON-NLS
 	}
 		
 	@Override

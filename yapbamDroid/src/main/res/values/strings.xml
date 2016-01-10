@@ -97,4 +97,7 @@
     <string name="subtransactions">Subtransactions</string>
     <string name="complement">Complement</string>
 
+    <!-- Balance history -->
+    <string name="no_account_selected">No account is selected</string>
+
 </resources>

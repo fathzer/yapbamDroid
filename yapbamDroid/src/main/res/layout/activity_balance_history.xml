@@ -56,27 +56,26 @@
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="No limit"
+                    android:layout_height="fill_parent"
                     android:id="@+id/from"
                     android:longClickable="true"
-                    android:onClick="selectFrom" />
+                    android:onClick="selectFrom"
+                    android:gravity="center_vertical" />
 
-                <TextView
+                <ImageView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="to"
-                    android:id="@+id/arrow"
-                    android:layout_weight="1"
-                    android:gravity="center" />
+                    android:id="@+id/c"
+                    android:src="@drawable/ic_navigation_next_item"
+                    android:layout_weight="1" />
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="No limit"
+                    android:layout_height="fill_parent"
                     android:id="@+id/to"
                     android:onClick="selectTo"
-                    android:longClickable="true" />
+                    android:longClickable="true"
+                    android:gravity="center_vertical" />
             </LinearLayout>
 
             <TextView

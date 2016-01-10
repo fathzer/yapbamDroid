@@ -75,7 +75,7 @@ public class AccountDetailActivity extends AbstractYapbamActivity {
 		double more = account.getAlertThreshold().getMoreThreshold();
 		if (more!=Double.POSITIVE_INFINITY) {
 			if (builder.length()>0) {
-				builder.append("<br>");
+				builder.append("<br>"); //NON-NLS
 			}
 			builder.append(MessageFormat.format(getString(R.string.account_alert_over),
 					Yapbam.CURRENCY_FORMAT.format(more)));
@@ -83,7 +83,7 @@ public class AccountDetailActivity extends AbstractYapbamActivity {
 		Alert nextAlert = account.getFirstAlert(new Date(), null);
 		if (nextAlert!=null) {
 			if (builder.length()>0) {
-				builder.append("<br>");
+				builder.append("<br>"); //NON-NLS
 			}
 			builder.append(MessageFormat.format(getString(R.string.account_next_alert),
 					Yapbam.CURRENCY_FORMAT.format(nextAlert.getBalance()), Yapbam.formatShort(nextAlert.getDate())));

@@ -9,7 +9,6 @@ import android.widget.DatePicker;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.fathzer.android.spinner.MultiSpinner;
 import com.fathzer.android.spinner.MultiSpinner.MultiSpinnerListener;
@@ -40,8 +39,10 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 public class BalanceHistoryActivity extends AbstractYapbamActivity {
-	private static final String ACCOUNT_NAMES_KEY = "accountNames";
-	public static final String DATE_PICKER = "datePicker";
+	private static final String ACCOUNT_NAMES_KEY = "accountNames"; //NON-NLS
+	private static final String MIN_DATE_KEY ="minDate"; //NON-NLS
+	private static final String MAX_DATE_KEY ="maxDate"; //NON-NLS
+	public static final String DATE_PICKER = "datePicker"; //NON-NLS
 
 	private final class SpinnerListener implements MultiSpinnerListener {
 		@Override
@@ -58,13 +59,11 @@ public class BalanceHistoryActivity extends AbstractYapbamActivity {
 			String[] selectedNames = listAccountNames.toArray(new String[listAccountNames.size()]);
 			if (!Arrays.equals(selectedNames, BalanceHistoryActivity.this.accountNames)) {
 				// If we selected a new account
-				logger.trace("Setting account to {}",Arrays.toString(selectedNames));
+				logger.trace("Setting account to {}",Arrays.toString(selectedNames)); //NON-NLS
 				BalanceHistoryActivity.this.accountNames = selectedNames;
 				history = build(Yapbam.getDataManager().getData());
 				Date hFrom = history.get(0).getTo();
 				Date hTo = history.get(history.size()-1).getFrom();
-				Log.i("BalanceHistory", "from "+hFrom); //TODO
-				Log.i("BalanceHistory", "to "+hTo); //TODO
 				dateRangeUpdated();
 			}
 		}
@@ -92,6 +91,8 @@ public class BalanceHistoryActivity extends AbstractYapbamActivity {
 			accountNames = new String[]{getIntent().getStringExtra(Yapbam.ACCOUNT_NAME)};
 		} else {
 			accountNames = (String[]) savedInstanceState.getCharSequenceArray(ACCOUNT_NAMES_KEY);
+			minDate = (Date) savedInstanceState.getSerializable(MIN_DATE_KEY);
+			maxDate = (Date) savedInstanceState.getSerializable(MAX_DATE_KEY);
 		}
 		final ExpandableListView list = (ExpandableListView)findViewById(R.id.balanceHistory);
         list.setOnChildClickListener(new OnChildClickListener() {
@@ -156,8 +157,10 @@ public class BalanceHistoryActivity extends AbstractYapbamActivity {
 				finish();
 			}
 			TextView accountNameView = (TextView)findViewById(R.id.accountName);
-			if (data.getAccountsNumber()==1) {
-				accountNameView.setText(data.getAccountsNumber()==0?"No account" : data.getAccount(0).getName());
+			if (data.getAccountsNumber()==0) {
+				accountNameView.setText("No account");
+			} else if (data.getAccountsNumber()==1) {
+				accountNameView.setText(data.getAccount(0).getName());
 			} else {
 				// Create an ArrayAdapter using the string array and a default spinner layout
 				final String[] allAccountNames = new String[data.getAccountsNumber()];
@@ -185,21 +188,25 @@ public class BalanceHistoryActivity extends AbstractYapbamActivity {
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putCharSequenceArray(ACCOUNT_NAMES_KEY, accountNames);
-		//TODO Set the from/to dates
+		if (minDate!=null) {
+			outState.putSerializable(MIN_DATE_KEY, minDate);
+		}
+		if (maxDate!=null) {
+			outState.putSerializable(MAX_DATE_KEY, maxDate);
+		}
 	}
 	
 	private void dateRangeUpdated() {
-		logger.trace("dateRangeUpdated {}-{}", minDate, maxDate);
+		logger.trace("dateRangeUpdated {}-{}", minDate, maxDate); //NON-NLS
 		TextView commentView = (TextView) findViewById(R.id.dateRange);
 		String comment = null;
 		if (history.size()<=1) {
-			comment = "This account contains no transaction";
+			comment = getResources().getString(accountNames.length==0?R.string.no_account_selected:R.string.no_transaction);
 		} else if (history.size()>2) {
 			final Date min = minDate==null?history.get(0).getTo():minDate;
 			final Date max = maxDate==null?history.get(history.size()-1).getFrom():maxDate;
 			((TextView) findViewById(R.id.from)).setText(Yapbam.formatShort(min));
 			((TextView) findViewById(R.id.to)).setText(Yapbam.formatShort(max));
-//			comment = MessageFormat.format("From {0} to {1}", Yapbam.formatShort(min), Yapbam.formatShort(max));
 		}
 		if (comment!=null) {
 			commentView.setText(comment);

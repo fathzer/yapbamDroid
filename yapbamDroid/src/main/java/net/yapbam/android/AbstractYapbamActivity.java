@@ -96,7 +96,7 @@ public abstract class AbstractYapbamActivity extends Activity {
 
 	private void refresh() {
 		State state = getDataManager().getState();
-		logger.trace("refresh called with state {}",state);
+		logger.trace("refresh called with state {}",state); //NON-NLS
 		if (state.equals(State.ERROR) || state.equals(State.UNSUPPORTED_FORMAT) || state.equals(State.PASSWORD_REQUIRED)) {
 			setStatus(Status.ERROR);
 			if (state.equals(State.ERROR)) {
@@ -104,7 +104,7 @@ public abstract class AbstractYapbamActivity extends Activity {
 			} else if (state.equals(State.UNSUPPORTED_FORMAT)) {
 				((TextView)findViewById(R.id.error)).setText(Html.fromHtml(getString(R.string.open_unsupported)), TextView.BufferType.SPANNABLE);
 			} else if (state.equals(State.PASSWORD_REQUIRED)) {
-				logger.trace("Password is required");//TODO
+				logger.trace("Password is required"); //NON-NLS
 				doPasswordRequired();
 			}
 		} else if (state.equals(State.DELETED)) {

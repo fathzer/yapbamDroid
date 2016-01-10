@@ -79,4 +79,5 @@
     <string name="editTransaction">Editer l\'opération</string>
     <string name="deleteTransaction">Supprimer l\'opération</string>
     <string name="confirm_delete_transaction">Voulez-vous vraiment supprimer cette opération?</string>
+    <string name="no_account_selected">Aucun compte n\'est sélectionné</string>
 </resources>
