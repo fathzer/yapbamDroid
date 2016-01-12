@@ -99,5 +99,6 @@
 
     <!-- Balance history -->
     <string name="no_account_selected">No account is selected</string>
+    <string name="statement">Statement</string>
 
 </resources>

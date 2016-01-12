@@ -3,6 +3,8 @@ package net.yapbam.android.transaction;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -81,42 +83,48 @@ public class TransactionActivity extends AbstractYapbamActivity {
 			finish();
 			return;
 		}
+		boolean landscape = getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE;
+
 		((TextView) findViewById(R.id.account)).setText(transaction.getAccount().getName());
-		if (transaction.getStatement()==null) {
-			findViewById(R.id.statement).setVisibility(View.GONE);
-		} else {
-			((TextView) findViewById(R.id.statement)).setText(transaction.getStatement());
-		}
 		((TextView) findViewById(R.id.amount)).setText(DecimalFormat.getCurrencyInstance().format(transaction.getAmount()));
 		DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT);
-		((TextView) findViewById(R.id.date)).setText(format.format(transaction.getDate()));
-		if (transaction.getDateAsInteger()==transaction.getValueDateAsInteger()) {
-			findViewById(R.id.valueDate).setVisibility(View.GONE);
-		} else {
-			((TextView) findViewById(R.id.valueDate)).setText(format.format(transaction.getValueDate()));
-		}
+		final String date = format.format(transaction.getDate());
+		((TextView) findViewById(R.id.date)).setText(landscape?getCompound(R.string.date, date) : date);
+		final String valueDate = format.format(transaction.getValueDate());
+		((TextView) findViewById(R.id.valueDate)).setText(landscape?getCompound(R.string.valueDate, valueDate):valueDate);
 		((TextView) findViewById(R.id.description)).setText(transaction.getDescription());
 		if (transaction.getComment()==null) {
 			findViewById(R.id.comment).setVisibility(View.GONE);
 		} else {
 			((TextView) findViewById(R.id.comment)).setText(transaction.getComment());
 		}
-		if (transaction.getCategory().equals(Category.UNDEFINED)) {
-			findViewById(R.id.category).setVisibility(View.GONE);
-		} else {
-			((TextView) findViewById(R.id.category)).setText(getCompound(R.string.category, transaction.getCategory().getName()));
+
+		String category = Category.UNDEFINED.equals(transaction.getCategory()) ? "Undefined" : transaction.getCategory().getName();
+		if (landscape) {
+			category = getCompound(R.string.category, category);
 		}
-		if (transaction.getMode().equals(Mode.UNDEFINED)) {
-			findViewById(R.id.mode).setVisibility(View.GONE);
-		} else {
-			((TextView) findViewById(R.id.mode)).setText(getCompound(R.string.mode, transaction.getMode().getName()));
+		((TextView) findViewById(R.id.category)).setText(category);
+
+		String mode = Mode.UNDEFINED.equals(transaction.getMode()) ? "Undefined" : transaction.getMode().getName();
+		if (landscape) {
+			mode = getCompound(R.string.mode, mode);
 		}
-		if (transaction.getNumber()==null) {
+		((TextView) findViewById(R.id.mode)).setText(mode);
+
+		final String number = transaction.getNumber();
+		if (number ==null) {
 			findViewById(R.id.number).setVisibility(View.GONE);
 		} else {
-			((TextView) findViewById(R.id.number)).setText(getCompound(R.string.number, transaction.getNumber()));
+			((TextView) findViewById(R.id.number)).setText(landscape?getCompound(R.string.number, number):number);
 		}
-/*		
+
+		final String statement = transaction.getStatement();
+		if (statement ==null) {
+			findViewById(R.id.statement).setVisibility(View.GONE);
+		} else {
+			((TextView) findViewById(R.id.statement)).setText(landscape?getCompound(R.string.statement, statement): statement);
+		}
+/*
 		TableLayout table = (TableLayout) findViewById(R.id.subtransactions);
 		if (transaction.getSubTransactionSize()==0) {
 			table.setVisibility(View.GONE);
