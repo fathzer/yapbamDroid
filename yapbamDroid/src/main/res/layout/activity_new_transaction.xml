@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/content"
@@ -23,24 +23,45 @@
                 android:id="@+id/imageView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:src="@drawable/ic_bank" />
+                android:src="@drawable/ic_bank"
+                android:layout_margin="5dp" />
 
-            <TextView
-                android:id="@+id/account"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:text="HSBC"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/statement"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:text="Statement" />
+                <Spinner
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/account"
+                    android:layout_margin="5dp" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <EditText
+                        android:id="@+id/amount"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:inputType="text"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:layout_weight="1" />
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Receipt"
+                        android:id="@+id/receipt"
+                        android:layout_marginRight="5dp"
+                        android:onClick="onReceiptClicked" />
+                </LinearLayout>
+
+            </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout
@@ -50,6 +71,13 @@
             android:layout_margin="5dp"
             android:background="@drawable/back_yapbam_center"
             android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/statement"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="Statement" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -76,15 +104,6 @@
                         android:layout_height="wrap_content"
                         android:text="(31/1/2013)" />
                 </LinearLayout>
-
-                <EditText
-                    android:id="@+id/amount"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="right"
-                    android:inputType="text"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
 
             </LinearLayout>
 
@@ -227,24 +246,17 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/button1"
-            android:layout_width="wrap_content"
+
+        <android.inputmethodservice.KeyboardView
+            android:id="@+id/keyboardview"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:text="Validate" />
-
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:visibility="gone" />
     </LinearLayout>
     <!-- NOTE No need to develop a system service for keyboard, there is a standard View for that (well, not completely standard, its in a funny package 'android.inputmethodservice'. -->
     <!-- NOTE The graphical layout does not know the package ('java.lang.NoClassDefFoundError: Could not initialize class android.inputmethodservice.KeyboardView') so the keyboard is not shown. -->
 
-    <android.inputmethodservice.KeyboardView
-        android:id="@+id/keyboardview"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:visibility="gone" />
-    
 </FrameLayout>

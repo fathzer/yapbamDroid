@@ -144,7 +144,8 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:text="comment"
-                    android:layout_marginBottom="5dp" />
+                    android:layout_marginBottom="5dp"
+                    android:textColor="@android:color/black" />
 
                 <View
                     android:layout_height="1dip"
@@ -187,14 +188,16 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:text="Category"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:textColor="@android:color/black" />
 
                     <TextView
                         android:id="@+id/statement"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Statement"
-                        android:layout_gravity="right" />
+                        android:layout_gravity="right"
+                        android:textColor="@android:color/black" />
                 </TableRow>
 
                 <View
@@ -229,14 +232,16 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Mode" />
+                        android:text="Mode"
+                        android:textColor="@android:color/black" />
 
                     <TextView
                         android:id="@+id/number"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Number"
-                        android:layout_gravity="right" />
+                        android:layout_gravity="right"
+                        android:textColor="@android:color/black" />
 
                 </TableRow>
 
