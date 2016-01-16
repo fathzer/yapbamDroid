@@ -21,12 +21,17 @@ public class AccountDetailActivity extends AbstractYapbamActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState, R.layout.activity_account_detail);
+		super.onCreate(savedInstanceState);
 		Intent intent = getIntent();
 		accountName = intent.getStringExtra(Yapbam.ACCOUNT_NAME);
 	}
 
-	@Override
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_account_detail;
+    }
+
+    @Override
 	protected void onDataStateChanged() {
 		DataManager dataManager = Yapbam.getDataManager();
 		if (dataManager.getState().equals(State.OK)) {

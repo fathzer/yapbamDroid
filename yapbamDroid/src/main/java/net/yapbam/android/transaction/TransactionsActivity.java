@@ -66,7 +66,7 @@ public class TransactionsActivity extends AbstractYapbamActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		this.logger = LoggerFactory.getLogger(getClass());
 		logger.trace("onCreate with {} empty bundle",savedInstanceState==null?"":"non "); //$NON-NLS-1$
-		super.onCreate(savedInstanceState, R.layout.activity_transactions);
+		super.onCreate(savedInstanceState);
 		this.pageIndex = -1;
 		
 		Intent intent = getIntent();
@@ -90,8 +90,13 @@ public class TransactionsActivity extends AbstractYapbamActivity {
 		});
 
 	}
-	
-	public void prev(View v) {
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_transactions;
+    }
+
+    public void prev(View v) {
 		if (splitter.shouldBeSplit() && (pageIndex>0)) {
 			pageIndex--;
 			setListAdapter();

@@ -31,13 +31,15 @@ public abstract class AbstractYapbamActivity extends Activity {
 	private Observer observer;
 	protected Logger logger;
 
-	public void onCreate(Bundle savedInstanceState, int layoutId) {
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(layoutId);
+		setContentView(getLayoutId());
 		getLayoutInflater().inflate(R.layout.view_data_management, getMainViewGroup());
 		this.dataManager = Yapbam.getDataManager();
 		this.logger = LoggerFactory.getLogger(getClass());
 	}
+
+    protected abstract int getLayoutId();
 
 	/**
 	 * Gets the view group where the "update is available" component should be

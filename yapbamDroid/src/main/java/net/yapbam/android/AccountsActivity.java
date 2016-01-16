@@ -23,7 +23,7 @@ public class AccountsActivity extends AbstractYapbamActivity {
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState, R.layout.activity_accounts);
+		super.onCreate(savedInstanceState);
 		this.contentView = (ListView) findViewById(R.id.content);
 		final AccountAdapter adapter = new AccountAdapter(this, this.getDataManager());
 		contentView.setAdapter(adapter);
@@ -34,8 +34,13 @@ public class AccountsActivity extends AbstractYapbamActivity {
 			}
 		});
 	}
-	
-	@Override
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_accounts;
+    }
+
+    @Override
 	protected ViewGroup getMainViewGroup() {
 		return (ViewGroup)findViewById(R.id.frameLayout);
 	}

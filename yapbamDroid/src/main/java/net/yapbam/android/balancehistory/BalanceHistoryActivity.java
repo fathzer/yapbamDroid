@@ -80,7 +80,7 @@ public class BalanceHistoryActivity extends AbstractYapbamActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState, R.layout.activity_balance_history);
+		super.onCreate(savedInstanceState);
 		// Add the date range seek bar 
 		ViewGroup layout = (ViewGroup) findViewById(R.id.bottomLayout);
 		spinner = (MultiSpinner)findViewById(R.id.spinner);
@@ -123,7 +123,12 @@ public class BalanceHistoryActivity extends AbstractYapbamActivity {
 		});
 	}
 
-	private BalanceHistory build(GlobalData data) {
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_balance_history;
+    }
+
+    private BalanceHistory build(GlobalData data) {
 		if (accountNames.length==1) {
 			Account account = data.getAccount(accountNames[0]);
 			if (account==null) {

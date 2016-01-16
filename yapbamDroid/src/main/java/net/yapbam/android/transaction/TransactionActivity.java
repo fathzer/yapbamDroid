@@ -30,12 +30,13 @@ public class TransactionActivity extends AbstractYapbamActivity {
 	public static final String TRANSACTION_NUMBER = "transaction_id"; //$NON-NLS-1$
 	private int transactionNum;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState, R.layout.activity_transaction);
-	}
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_transaction;
+    }
 
-	@Override
+
+    @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.transaction, menu);

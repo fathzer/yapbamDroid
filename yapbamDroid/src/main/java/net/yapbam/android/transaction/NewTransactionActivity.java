@@ -1,13 +1,15 @@
 package net.yapbam.android.transaction;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -18,8 +20,6 @@ import com.fathzer.android.keyboard.DecimalKeyboard;
 import net.astesana.android.Log;
 import net.yapbam.android.R;
 import net.yapbam.android.AbstractYapbamActivity;
-import net.yapbam.android.SelectFileActivity;
-import net.yapbam.android.Yapbam;
 import net.yapbam.android.datamanager.DataManager.State;
 import net.yapbam.android.keyboard.AutoHideDecimalKeyboard;
 import net.yapbam.data.Category;
@@ -40,19 +40,49 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
 	public static final String TRANSACTION_NUMBER = "transaction_id"; //$NON-NLS-1$
 	public static final String ACCOUNT_NAME = "account_name"; //$NON-NLS-1$
 
-	private DecimalKeyboard mCustomKeyboard;
+    private DecimalKeyboard mCustomKeyboard;
+    private String accountName;
+
+    private class AccountSpinnerListener implements AdapterView.OnItemSelectedListener, View.OnTouchListener {
+        private boolean userSelect = false;
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            Log.v(NewTransactionActivity.this, "onTouch");
+            userSelect = true;
+            return false;
+        }
+
+        @Override
+        public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+            if (userSelect) {
+                userSelect = false;
+                Log.v(NewTransactionActivity.this, "Selection is " + position);
+                accountName = getDataManager().getData().getAccount(position).getName();
+            }
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parentView) {
+            userSelect = false;
+        }
+    }
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState, R.layout.activity_new_transaction);
-		mCustomKeyboard= new AutoHideDecimalKeyboard(this, R.id.keyboardview, R.xml.deckbd );
+		Log.v(this, "onCreate");
+		super.onCreate(savedInstanceState);
+        mCustomKeyboard = new AutoHideDecimalKeyboard(this, R.id.keyboardview, R.xml.deckbd );
 		mCustomKeyboard.registerEditText(R.id.amount);
+		final Spinner spinner = (Spinner) findViewById(R.id.account);
+        final AccountSpinnerListener listener = new AccountSpinnerListener();
+        spinner.setOnItemSelectedListener(listener);
+        spinner.setOnTouchListener(listener);
 	}
 
 	/** Fills the account spinner and sets the selected account.
-	 * @param accountName The currently selected account
 	 */
-	private void fillAccountSpinner(String accountName) {
+	private void fillAccountSpinner() {
 		GlobalData data = getDataManager().getData();
 		List<String> accounts = new ArrayList<>(data.getAccountsNumber());
 		for (int i=0;i<data.getAccountsNumber();i++) {
@@ -62,7 +92,7 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
 		final Spinner spinner = (Spinner) findViewById(R.id.account);
 		spinner.setAdapter(adapter);
 		spinner.setSelection(accounts.indexOf(accountName));
-	}
+    }
 
 	// Fills the mode spinner
 	private void fillModeSpinner() {
@@ -71,7 +101,7 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
 
 	@Override
 	protected void onDataStateChanged() {
-		Log.v(this,"onDataStateChanged called"); //$NON-NLS-1$
+		Log.v(this,"onDataStateChanged"); //$NON-NLS-1$
 		if (!getDataManager().getState().equals(State.OK)) {
 			return;
 		}
@@ -79,8 +109,10 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
 		int transactionNum = getIntent().getIntExtra(TRANSACTION_NUMBER, -1);
 		Transaction transaction = (transactionNum==-1 || data.getTransactionsNumber()<=transactionNum) ? null : data.getTransaction(transactionNum);
 		// Transaction is null if we are creating a new activity
-		String accountName = transaction==null ? getIntent().getStringExtra(ACCOUNT_NAME) : transaction.getAccount().getName();
-		fillAccountSpinner(accountName);
+		if (accountName==null) {
+			accountName = transaction == null ? getIntent().getStringExtra(ACCOUNT_NAME) : transaction.getAccount().getName();
+		}
+		fillAccountSpinner();
 		double amount = transaction==null?0.0:transaction.getAmount();
 		NumberFormat currencyInstance = DecimalFormat.getCurrencyInstance();
 		NumberFormat formatter = new DecimalFormat();
@@ -89,7 +121,10 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
 		formatter.setMaximumFractionDigits(currencyInstance.getMaximumFractionDigits());
 		formatter.setMinimumIntegerDigits(currencyInstance.getMinimumIntegerDigits());
 		formatter.setMaximumIntegerDigits(currencyInstance.getMaximumIntegerDigits());
-		((TextView) findViewById(R.id.amount)).setText(formatter.format(amount));
+		((TextView) findViewById(R.id.amount)).setText(formatter.format(Math.abs(amount)));
+
+        CheckBox receipt = (CheckBox) findViewById(R.id.receipt);
+        receipt.setChecked(amount > 0);
 
 		DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT);
 		Date date = transaction==null ? new Date() : transaction.getDate();
@@ -108,36 +143,26 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
 			((TextView) findViewById(R.id.comment)).setText(transaction.getComment());
 			((TextView) findViewById(R.id.number)).setText(getCompound(R.string.number, transaction.getNumber()));
 		}
-//		if (transaction.getSubTransactionSize()==0) {
+		if (transaction==null || transaction.getSubTransactionSize()==0) {
 			findViewById(R.id.subtransactionsPanel).setVisibility(View.GONE);
-//		} else {
-//			ListView list = (ListView) findViewById(R.id.subtransactions);
-//			list.setAdapter(new SubTransactionsAdapter(this, transaction));
-//		}
+		} else {
+			ListView list = (ListView) findViewById(R.id.subtransactions);
+			list.setAdapter(new SubTransactionsAdapter(this, transaction));
+		}
 	}
 
 	@Override
-	protected void onPause() {
-		Log.v(this, "onPause"); //$NON-NLS-1$
-		super.onPause();
-	}
-
-	@Override
-	protected void onResume() {
-		Log.v(this,"onResume"); //$NON-NLS-1$
-		super.onResume();
-	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
+	protected void onSaveInstanceState(Bundle bundle) {
 		Log.v(this,"onSaveInstanceState"); //$NON-NLS-1$
-		super.onSaveInstanceState(outState);
+		bundle.putString(ACCOUNT_NAME, accountName);
+		super.onSaveInstanceState(bundle);
 	}
 
 	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+	protected void onRestoreInstanceState(Bundle bundle) {
 		Log.v(this,"onRestoreInstanceState"); //$NON-NLS-1$
-		super.onRestoreInstanceState(savedInstanceState);
+		accountName = bundle.getString(ACCOUNT_NAME);
+		super.onRestoreInstanceState(bundle);
 	}
 
 	public void onReceiptClicked(View v) {
@@ -147,6 +172,11 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
 	private String getCompound (int resId, String string) {
 		return MessageFormat.format(getString(R.string.twoPointsFormat), getString(resId), string);
 	}
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_new_transaction;
+    }
 
 	@Override
 	protected ViewGroup getMainViewGroup() {
