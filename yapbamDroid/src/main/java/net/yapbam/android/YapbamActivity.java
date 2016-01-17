@@ -5,12 +5,12 @@ import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.fathzer.android.dropbox.FileState;
 
 import net.astesana.android.Log;
 import net.yapbam.android.converter.CurrencyConverterActivity;
+import net.yapbam.android.test.TestActivity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,13 +38,14 @@ public class YapbamActivity extends Activity {
 				}
 			}
 		};
-		findViewById(R.id.button3).setVisibility(SHOW_TEST?View.VISIBLE:View.GONE);
+//		findViewById(R.id.button3).setVisibility(SHOW_TEST?View.VISIBLE:View.GONE);
 	}
 
 	public void doTest(View view) {
 		// This button is a place to make tests
-		Toast.makeText(this, "This is an empty test button", Toast.LENGTH_LONG).show(); //NON-NLS
-	}
+//		Toast.makeText(this, "This is an empty test button", Toast.LENGTH_LONG).show(); //NON-NLS
+        startActivity(new Intent(this, TestActivity.class));
+    }
 		
 	@Override
 	public void onResume() {

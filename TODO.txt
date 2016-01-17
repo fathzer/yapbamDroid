@@ -1,4 +1,5 @@
 Features indispensables :
+Le spinner avec UserOnlySpinnerListener ne fonctionne pas parfaitement : Si on ferme le menu, la prochaine MAJ par prog est prise en compte (voir réponse de medhdj à http://stackoverflow.com/questions/18447063/spinner-get-state-or-get-notified-when-opens)
 Saisie/Edition d'une nouvelle opération. -> L'icone de validation est beurk !!!
 Sauvegarde.
 Titre de l'activité d'édition d'opération

@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -16,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fathzer.android.keyboard.DecimalKeyboard;
+import com.fathzer.android.spinner.UserOnlySpinnerListener;
 
 import net.astesana.android.Log;
 import net.yapbam.android.R;
@@ -51,32 +51,6 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
 
     private String accountName;
     private int categoryIndex;
-
-    private static abstract class UserOnlySpinnerListener implements AdapterView.OnItemSelectedListener, View.OnTouchListener {
-        private boolean userSelect = false;
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            userSelect = true;
-            return false;
-        }
-
-        @Override
-        public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-            if (userSelect) {
-                userSelect = false;
-                doSelect(parentView, selectedItemView, position, id);
-            }
-        }
-
-        protected abstract void doSelect(AdapterView<?> parentView, View selectedItemView, int position, long id);
-
-        @Override
-        public void onNothingSelected(AdapterView<?> parentView) {
-            userSelect = false;
-        }
-
-    }
 
     public static class DatePicker extends DatePickerFragment {
         private static final String FIELD_ID_KEY = "id"; //NON-NLS
@@ -130,7 +104,8 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
 			accounts.add(data.getAccount(i).getName());
 		}
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, accounts);
-		final Spinner spinner = (Spinner) findViewById(R.id.account);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        final Spinner spinner = (Spinner) findViewById(R.id.account);
 		spinner.setAdapter(adapter);
 		spinner.setSelection(accounts.indexOf(accountName));
     }
@@ -146,10 +121,11 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
     private void fillCategorySpinner() {
         GlobalData data = getDataManager().getData();
         List<String> categories = new ArrayList<>(data.getCategoriesNumber());
-        for (int i=0;i<data.getAccountsNumber();i++) {
+        for (int i=0;i<data.getCategoriesNumber();i++) {
             categories.add(data.getCategory(i).getName());
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         final Spinner spinner = (Spinner) findViewById(R.id.category);
         spinner.setAdapter(adapter);
         spinner.setSelection(categoryIndex);

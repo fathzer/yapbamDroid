@@ -82,6 +82,10 @@
             android:name="net.yapbam.android.balancehistory.BalanceHistoryActivity"
             android:label="@string/title_activity_balance_history" >
         </activity>
+        <activity
+            android:name=".test.TestActivity"
+            >
+        </activity>
     </application>
 
 </manifest>

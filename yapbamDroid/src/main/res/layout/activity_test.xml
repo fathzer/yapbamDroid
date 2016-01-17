@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:id="@+id/frameLayout"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+    <LinearLayout
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical"
+              android:id="@+id/content">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/amount"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:inputType="text"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_weight="1" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Receipt"
+                android:id="@+id/receipt"
+                android:layout_marginRight="5dp"/>
+        </LinearLayout>
+
+        <Spinner
+            android:id="@+id/spinner2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:prompt="@string/setFile"
+            android:focusable="false"
+            android:focusableInTouchMode="false"/>
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Test" />
+
+    </LinearLayout>
+    <!-- NOTE No need to develop a system service for keyboard, there is a standard View for that (well, not completely standard, its in a funny package 'android.inputmethodservice'. -->
+    <!-- NOTE The graphical layout does not know the package ('java.lang.NoClassDefFoundError: Could not initialize class android.inputmethodservice.KeyboardView') so the keyboard is not shown. -->
+    <android.inputmethodservice.KeyboardView
+        android:id="@+id/keyboardview"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:visibility="gone" />
+</FrameLayout>
