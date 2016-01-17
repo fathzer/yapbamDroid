@@ -48,7 +48,6 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            Log.v(NewTransactionActivity.this, "onTouch");
             userSelect = true;
             return false;
         }
@@ -57,7 +56,6 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
         public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
             if (userSelect) {
                 userSelect = false;
-                Log.v(NewTransactionActivity.this, "Selection is " + position);
                 accountName = getDataManager().getData().getAccount(position).getName();
             }
         }
@@ -105,50 +103,56 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
 		if (!getDataManager().getState().equals(State.OK)) {
 			return;
 		}
-		GlobalData data = getDataManager().getData();
-		int transactionNum = getIntent().getIntExtra(TRANSACTION_NUMBER, -1);
-		Transaction transaction = (transactionNum==-1 || data.getTransactionsNumber()<=transactionNum) ? null : data.getTransaction(transactionNum);
-		// Transaction is null if we are creating a new activity
-		if (accountName==null) {
-			accountName = transaction == null ? getIntent().getStringExtra(ACCOUNT_NAME) : transaction.getAccount().getName();
-		}
-		fillAccountSpinner();
-		double amount = transaction==null?0.0:transaction.getAmount();
-		NumberFormat currencyInstance = DecimalFormat.getCurrencyInstance();
-		NumberFormat formatter = new DecimalFormat();
-		formatter.setGroupingUsed(currencyInstance.isGroupingUsed());
-		formatter.setMinimumFractionDigits(currencyInstance.getMinimumFractionDigits());
-		formatter.setMaximumFractionDigits(currencyInstance.getMaximumFractionDigits());
-		formatter.setMinimumIntegerDigits(currencyInstance.getMinimumIntegerDigits());
-		formatter.setMaximumIntegerDigits(currencyInstance.getMaximumIntegerDigits());
-		((TextView) findViewById(R.id.amount)).setText(formatter.format(Math.abs(amount)));
+        String name = getIntent().getStringExtra(ACCOUNT_NAME);
+        getIntent().removeExtra(ACCOUNT_NAME);
+        int transactionNum = getIntent().getIntExtra(TRANSACTION_NUMBER, -1);
+        getIntent().removeExtra(TRANSACTION_NUMBER);
+        GlobalData data = getDataManager().getData();
+        if (transactionNum != -1 && transactionNum<data.getTransactionsNumber() || name!=null) {
+            // if activity has been launched by user
+            Log.v(this,"Initializing view");
+            Transaction transaction = transactionNum!=-1?data.getTransaction(transactionNum):null;
+            accountName = name!=null?name:transaction.getAccount().getName();
 
-        CheckBox receipt = (CheckBox) findViewById(R.id.receipt);
-        receipt.setChecked(amount > 0);
+            NumberFormat currencyInstance = DecimalFormat.getCurrencyInstance();
+            // Currency instance formatter displays the currency symbol, create a new format without this symbol.
+            NumberFormat formatter = new DecimalFormat();
+            formatter.setGroupingUsed(currencyInstance.isGroupingUsed());
+            formatter.setMinimumFractionDigits(currencyInstance.getMinimumFractionDigits());
+            formatter.setMaximumFractionDigits(currencyInstance.getMaximumFractionDigits());
+            formatter.setMinimumIntegerDigits(currencyInstance.getMinimumIntegerDigits());
+            formatter.setMaximumIntegerDigits(currencyInstance.getMaximumIntegerDigits());
+            // Render the amount
+            double amount = transaction==null?0.0:transaction.getAmount();
+            ((TextView) findViewById(R.id.amount)).setText(formatter.format(Math.abs(amount)));
+            ((CheckBox) findViewById(R.id.receipt)).setChecked(amount > 0);
 
-		DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT);
-		Date date = transaction==null ? new Date() : transaction.getDate();
-		((TextView) findViewById(R.id.date)).setText(format.format(date));
-		Date valueDate = transaction==null ? date : transaction.getValueDate();
-		((TextView) findViewById(R.id.valueDate)).setText(format.format(valueDate));
-		Category category = transaction==null ? Category.UNDEFINED:transaction.getCategory();
-		((TextView) findViewById(R.id.category)).setText(getCompound(R.string.category, category.getName()));
-		Mode mode = transaction==null? Mode.UNDEFINED:transaction.getMode();
-		((TextView) findViewById(R.id.mode)).setText(getCompound(R.string.mode, mode.getName()));
-		if (transaction!=null) {
-			if (transaction.getStatement()!=null) {
-				((TextView) findViewById(R.id.statement)).setText(transaction.getStatement());
-			}
-			((TextView) findViewById(R.id.description)).setText(transaction.getDescription());
-			((TextView) findViewById(R.id.comment)).setText(transaction.getComment());
-			((TextView) findViewById(R.id.number)).setText(getCompound(R.string.number, transaction.getNumber()));
-		}
-		if (transaction==null || transaction.getSubTransactionSize()==0) {
-			findViewById(R.id.subtransactionsPanel).setVisibility(View.GONE);
-		} else {
-			ListView list = (ListView) findViewById(R.id.subtransactions);
-			list.setAdapter(new SubTransactionsAdapter(this, transaction));
-		}
+            DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT);
+            Date date = transaction==null ? new Date() : transaction.getDate();
+            ((TextView) findViewById(R.id.date)).setText(format.format(date));
+            Date valueDate = transaction==null ? date : transaction.getValueDate();
+            ((TextView) findViewById(R.id.valueDate)).setText(format.format(valueDate));
+            Category category = transaction==null ? Category.UNDEFINED:transaction.getCategory();
+            ((TextView) findViewById(R.id.category)).setText(getCompound(R.string.category, category.getName()));
+            Mode mode = transaction==null? Mode.UNDEFINED:transaction.getMode();
+            ((TextView) findViewById(R.id.mode)).setText(getCompound(R.string.mode, mode.getName()));
+
+            if (transaction!=null) {
+                if (transaction.getStatement()!=null) {
+                    ((TextView) findViewById(R.id.statement)).setText(transaction.getStatement());
+                }
+                ((TextView) findViewById(R.id.description)).setText(transaction.getDescription());
+                ((TextView) findViewById(R.id.comment)).setText(transaction.getComment());
+                ((TextView) findViewById(R.id.number)).setText(getCompound(R.string.number, transaction.getNumber()));
+            }
+            if (transaction==null || transaction.getSubTransactionSize()==0) {
+                findViewById(R.id.subtransactionsPanel).setVisibility(View.GONE);
+            } else {
+                ListView list = (ListView) findViewById(R.id.subtransactions);
+                list.setAdapter(new SubTransactionsAdapter(this, transaction));
+            }
+        }
+        fillAccountSpinner();
 	}
 
 	@Override

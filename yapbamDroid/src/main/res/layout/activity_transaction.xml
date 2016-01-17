@@ -60,43 +60,41 @@
             android:background="@drawable/back_yapbam_center"
             android:orientation="vertical" >
 
-            <LinearLayout
+            <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal">
+                android:layout_marginTop="1dp">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/date" />
-
-                    <TextView
-                        android:id="@+id/date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="21/1/2013"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="vertical"
+                <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/date"
+                        android:layout_weight="1"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/valueDate"
                         android:layout_gravity="right" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/date"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="21/1/2013"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:layout_weight="1"/>
 
                     <TextView
                         android:id="@+id/valueDate"
@@ -105,14 +103,7 @@
                         android:text="31/1/2013"
                         android:layout_gravity="right"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                </TableRow>
 
                 <View
                     android:layout_height="1dip"
@@ -125,15 +116,12 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/description"
-                    android:layout_marginRight="1dp"
-                    android:layout_marginLeft="5dp" />
+                    />
 
                 <TextView
                     android:id="@+id/description"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
                     android:text="Description"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -141,10 +129,7 @@
                     android:id="@+id/comment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
                     android:text="comment"
-                    android:layout_marginBottom="5dp"
                     android:textColor="@android:color/black" />
 
                 <View
@@ -153,14 +138,6 @@
                     android:background="@drawable/back"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp" />
-            </LinearLayout>
-
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                >
 
                 <TableRow
                     android:layout_width="match_parent"
