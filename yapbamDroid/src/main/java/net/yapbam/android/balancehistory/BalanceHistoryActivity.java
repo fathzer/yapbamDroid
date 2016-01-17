@@ -2,7 +2,6 @@ package net.yapbam.android.balancehistory;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
@@ -27,10 +26,6 @@ import net.yapbam.data.FilteredData;
 import net.yapbam.data.GlobalData;
 import net.yapbam.data.Transaction;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -74,15 +69,12 @@ public class BalanceHistoryActivity extends AbstractYapbamActivity {
 	private AlertThreshold alertThreshold;
 	private MultiSpinner spinner;
 	private boolean spinnerActivated;
-	private Logger logger = LoggerFactory.getLogger(getClass());
 	private Date minDate;
 	private Date maxDate;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// Add the date range seek bar 
-		ViewGroup layout = (ViewGroup) findViewById(R.id.bottomLayout);
 		spinner = (MultiSpinner)findViewById(R.id.spinner);
 		spinner.setDialogTitle(getString(R.string.account));
 		spinner.setSelectAllText(getString(R.string.all_male));

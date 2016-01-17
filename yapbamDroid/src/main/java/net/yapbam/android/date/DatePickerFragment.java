@@ -24,7 +24,7 @@ public abstract class DatePickerFragment extends DialogFragment implements DateP
         getBundle().putSerializable(MAX_DATE_KEY, date);
     }
 
-    private Bundle getBundle() {
+    protected Bundle getBundle() {
         Bundle result = getArguments();
         if (result==null) {
             result = new Bundle();
