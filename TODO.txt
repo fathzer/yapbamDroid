@@ -1,5 +1,10 @@
 Features indispensables :
-Saisie/Edition d'une nouvelle opération. -> L'icone de validation est beurk !!!
+Saisie/Edition d'une nouvelle opération :
+ - L'icone de validation est beurk !!!
+ - Le layout landscape est à faire
+ - L'édition des sous-opérations aussi
+ - Comme les propositions de saisie.
+ - Les claviers se masquent mutuellement
 Sauvegarde.
 Titre de l'activité d'édition d'opération
 

@@ -31,11 +31,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <Spinner
+                <com.fathzer.android.spinner.CustomSpinner
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/account"
-                    android:layout_margin="5dp" />
+                    android:layout_margin="5dp"
+                    android:spinnerMode="dialog"/>
 
                 <LinearLayout
                     android:orientation="horizontal"
@@ -64,24 +65,16 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/centerLayout"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_margin="5dp"
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/back_yapbam_center"
-            android:orientation="vertical" >
-
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="1dp">
+            android:layout_margin="5dp"
+            android:padding="5dp">
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:layout_width="fill_parent"
@@ -98,7 +91,7 @@
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/date"
@@ -144,150 +137,101 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp" />
 
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="5dp"
-                    android:text="Category" />
-
-                    <Spinner
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/category"
-                        android:verticalScrollbarPosition="right"
-                        android:spinnerMode="dropdown"/>
-                </LinearLayout>
-
-                <TextView
-                android:id="@+id/statement"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:text="Statement" />
-
-            <LinearLayout
+            <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp" >
+                android:layout_gravity="center_vertical">
 
                 <TextView
-                    android:id="@+id/mode"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:text="Category"
+                    android:gravity="center_vertical"/>
+
+                <com.fathzer.android.spinner.CustomSpinner
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/category"
+                    android:verticalScrollbarPosition="right"
+                    android:spinnerMode="dialog"
+                    android:layout_weight="1"/>
+            </TableRow>
+
+            <View
+                android:layout_height="1dip"
+                android:layout_width="match_parent"
+                android:background="@drawable/back"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp" />
+
+            <TableRow android:layout_height="wrap_content"
+                      android:layout_width="fill_parent">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="Mode" />
+                <com.fathzer.android.spinner.CustomSpinner
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/mode"
+                    android:verticalScrollbarPosition="right"
+                    android:spinnerMode="dialog"
+                    android:layout_weight="1"/>
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
 
                 <TextView
-                    android:id="@+id/number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Number" />
-            </LinearLayout>
-            </TableLayout>
 
-            <!-- ScrollView
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:scrollbars="none" >
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="0dp"
-                android:orientation="vertical" >
-
-                <TableLayout
-                    android:id="@+id/subtransactions"
-                    android:layout_width="match_parent"
+                <EditText
+                    android:id="@+id/number"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:background="#ccc"
-                    android:shrinkColumns="*"
-                    android:stretchColumns="*" >
+                    android:layout_weight="1"/>
+            </TableRow>
 
-                    <TableRow
-                        android:id="@+id/tableRow4"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/back_grey"
-                        android:gravity="center_horizontal" >
-
-                        <TextView
-                            android:id="@+id/textView9"
-                            style="@style/tableElement.header"
-                            android:layout_span="3"
-                            android:gravity="center"
-                            android:text="@string/subtransactions" />
-                    </TableRow>
-
-                    <TableRow
-                        android:id="@+id/titleRow"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" >
-
-                        <TextView
-                            android:id="@+id/TextView04"
-                            style="@style/tableElement.header"
-                            android:gravity="center_horizontal"
-                            android:text="@string/description" />
-
-                        <TextView
-                            android:id="@+id/TextView03"
-                            style="@style/tableElement.header"
-                            android:gravity="center_horizontal"
-                            android:text="@string/category" />
-
-                        <TextView
-                            android:id="@+id/TextView05"
-                            style="@style/tableElement.header"
-                            android:gravity="center_horizontal"
-                            android:text="@string/amount" />
-                    </TableRow>
-                </TableLayout>
-            </LinearLayout>
-        </ScrollView -->
-
-            <LinearLayout
-                android:id="@+id/subtransactionsPanel"
+            <View
+                android:layout_height="1dip"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:background="@drawable/back_white_with_border"
-                android:orientation="vertical" >
+                android:background="@drawable/back"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp" />
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/textView9"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/back_white_with_border"
-                    android:gravity="center"
-                    android:text="@string/subtransactions"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:layout_marginRight="5dp"
+                    android:text="Statement" />
 
-                <ListView
-                    android:id="@+id/subtransactions"
-                    android:layout_width="match_parent"
+                <EditText
+                    android:id="@+id/statement"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="1dp" >
-                </ListView>
-            </LinearLayout>
+                    android:layout_weight="1"/>
+            </TableRow>
 
-        </LinearLayout>
+            <Button android:text="Edit subtransactions (0 for now)"
+                    android:onClick="onSubtransactions"
+                    android:id="@+id/viewSubtransactions"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"/>
+
+        </TableLayout>
 
     </LinearLayout>
     <!-- NOTE No need to develop a system service for keyboard, there is a standard View for that (well, not completely standard, its in a funny package 'android.inputmethodservice'. -->
     <!-- NOTE The graphical layout does not know the package ('java.lang.NoClassDefFoundError: Could not initialize class android.inputmethodservice.KeyboardView') so the keyboard is not shown. -->
+
     <android.inputmethodservice.KeyboardView
         android:id="@+id/keyboardview"
         android:layout_width="fill_parent"

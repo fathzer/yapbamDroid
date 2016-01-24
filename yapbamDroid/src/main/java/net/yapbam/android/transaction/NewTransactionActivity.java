@@ -2,14 +2,13 @@ package net.yapbam.android.transaction;
 
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +21,7 @@ import net.yapbam.android.AbstractYapbamActivity;
 import net.yapbam.android.datamanager.DataManager.State;
 import net.yapbam.android.date.DatePickerFragment;
 import net.yapbam.android.keyboard.AutoHideDecimalKeyboard;
+import net.yapbam.data.Account;
 import net.yapbam.data.GlobalData;
 import net.yapbam.data.Mode;
 import net.yapbam.data.Transaction;
@@ -45,11 +45,14 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
     private static final String DATE = "date"; //$NON-NLS-1$
     private static final String VALUE_DATE = "value_date"; //$NON-NLS-1$
     private static final String CATEGORY = "category"; //$NON-NLS-1$
+    private static final String MODE = "mode"; //NON-NLS
 
     public static final String DATE_PICKER = "datePicker"; //NON-NLS
 
     private String accountName;
     private int categoryIndex;
+    private String modeName;
+    private DecimalKeyboard mCustomKeyboard;
 
     public static class DatePicker extends DatePickerFragment {
         private static final String FIELD_ID_KEY = "id"; //NON-NLS
@@ -71,7 +74,7 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.v(this, "onCreate");
 		super.onCreate(savedInstanceState);
-        DecimalKeyboard mCustomKeyboard = new AutoHideDecimalKeyboard(this, R.id.keyboardview, R.xml.deckbd );
+        mCustomKeyboard = new AutoHideDecimalKeyboard(this, R.id.keyboardview, R.xml.deckbd );
 		mCustomKeyboard.registerEditText(R.id.amount);
 		final Spinner accountSpinner = (Spinner) findViewById(R.id.account);
         final AdapterView.OnItemSelectedListener accountListener = new AdapterView.OnItemSelectedListener() {
@@ -87,7 +90,6 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
             }
         };
         accountSpinner.setOnItemSelectedListener(accountListener);
-//        accountSpinner.setOnTouchListener(accountListener);
         final Spinner categorySpinner = (Spinner) findViewById(R.id.category);
         final AdapterView.OnItemSelectedListener categoryListener = new AdapterView.OnItemSelectedListener() {
             @Override
@@ -102,7 +104,21 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
             }
         };
         categorySpinner.setOnItemSelectedListener(categoryListener);
-//        categorySpinner.setOnTouchListener(categoryListener);
+
+        final Spinner modeSpinner = (Spinner) findViewById(R.id.mode);
+        final AdapterView.OnItemSelectedListener modeListener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                modeName = (String) parent.getItemAtPosition(position);
+                Log.v(this, "set mode to "+modeName);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                //Nothing to do
+            }
+        };
+        modeSpinner.setOnItemSelectedListener(modeListener);
 	}
 
 	/** Fills the account spinner and sets the selected account.
@@ -123,8 +139,30 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
     /** Fills the mode spinner.
      */
 	private void fillModeSpinner() {
-		//TODO
-	}
+        GlobalData data = getDataManager().getData();
+        Account account = data.getAccount(accountName);
+        List<String> modes = new ArrayList<>(account.getModesNumber());
+        boolean isReceipt = ((CheckBox)findViewById(R.id.receipt)).isChecked();
+        int selected = -1;
+        for (int i=0;i<account.getModesNumber();i++) {
+            Mode mode = account.getMode(i);
+            if ((mode.isUsableForReceipt() && isReceipt) || (mode.isUsableForExpense() && !isReceipt)) {
+                if (mode.getName().equals(modeName)) {
+                    selected = modes.size();
+                }
+                modes.add(mode.getName());
+            }
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, modes);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        final Spinner spinner = (Spinner) findViewById(R.id.mode);
+        spinner.setAdapter(adapter);
+        if (selected<0) {
+            modeName = Mode.UNDEFINED.getName();
+            selected = 0;
+        }
+        spinner.setSelection(selected);
+    }
 
     /** Fills the category spinner.
      */
@@ -178,8 +216,7 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
 
             categoryIndex = transaction==null ? 0:data.indexOf(transaction.getCategory());
 
-            Mode mode = transaction==null? Mode.UNDEFINED:transaction.getMode();
-            ((TextView) findViewById(R.id.mode)).setText(getCompound(R.string.mode, mode.getName()));
+            modeName = transaction==null ? Mode.UNDEFINED.getName():transaction.getMode().getName();
 
             if (transaction!=null) {
                 if (transaction.getStatement()!=null) {
@@ -187,14 +224,19 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
                 }
                 ((TextView) findViewById(R.id.description)).setText(transaction.getDescription());
                 ((TextView) findViewById(R.id.comment)).setText(transaction.getComment());
-                ((TextView) findViewById(R.id.number)).setText(getCompound(R.string.number, transaction.getNumber()));
+                if (transaction.getNumber()!=null) {
+                    ((TextView) findViewById(R.id.number)).setText(transaction.getNumber());
+                }
             }
-            if (transaction==null || transaction.getSubTransactionSize()==0) {
-                findViewById(R.id.subtransactionsPanel).setVisibility(View.GONE);
-            } else {
-                ListView list = (ListView) findViewById(R.id.subtransactions);
-                list.setAdapter(new SubTransactionsAdapter(this, transaction));
-            }
+
+            int nb = transaction==null ? 0 : transaction.getSubTransactionSize();
+            ((Button)findViewById(R.id.viewSubtransactions)).setText(MessageFormat.format("Edit subtransactions ({0} for now)", nb));
+//            if (transaction==null || transaction.getSubTransactionSize()==0) {
+//                findViewById(R.id.subtransactionsPanel).setVisibility(View.GONE);
+//            } else {
+//                ListView list = (ListView) findViewById(R.id.subtransactions);
+//                list.setAdapter(new SubTransactionsAdapter(this, transaction));
+//            }
         }
         fillAccountSpinner();
         fillModeSpinner();
@@ -208,6 +250,7 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
         bundle.putString(DATE, ((TextView) findViewById(R.id.date)).getText().toString());
         bundle.putString(VALUE_DATE, ((TextView)findViewById(R.id.valueDate)).getText().toString());
         bundle.putInt(CATEGORY, categoryIndex);
+        bundle.putString(MODE, modeName);
 		super.onSaveInstanceState(bundle);
 	}
 
@@ -218,13 +261,18 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
         ((TextView) findViewById(R.id.date)).setText(bundle.getString(DATE));
         ((TextView) findViewById(R.id.valueDate)).setText(bundle.getString(VALUE_DATE));
         categoryIndex = bundle.getInt(CATEGORY);
-        Log.v(this, "restore account to "+accountName+", cat to "+categoryIndex);
+        modeName = bundle.getString(MODE);
+        Log.v(this, "restore account to " + accountName + ", cat to " + categoryIndex + ", mode to " + modeName);
 		super.onRestoreInstanceState(bundle);
 	}
 
 	public void onReceiptClicked(View v) {
 		fillModeSpinner();
 	}
+
+    public void onSubtransactions(View v) {
+        Toast.makeText(NewTransactionActivity.this, "Not yet implemented", Toast.LENGTH_SHORT).show(); //TODO
+    }
 
     public void onDateClicked(View v) {
         DatePicker dialog = new DatePicker();
@@ -238,10 +286,6 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
             Log.w(this,"Unable to parse date field");
         }
     }
-
-	private String getCompound (int resId, String string) {
-		return MessageFormat.format(getString(R.string.twoPointsFormat), getString(resId), string);
-	}
 
     @Override
     protected int getLayoutId() {
@@ -260,16 +304,26 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.new_transaction, menu);
+        getMenuInflater().inflate(R.menu.new_transaction, menu);
 		return true;
 	}
 
-	@Override
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        Log.v(this, "Custom keyboard is visible: "+mCustomKeyboard.isCustomKeyboardVisible());
+        menu.findItem(R.id.action_hide_keyboard).setVisible(mCustomKeyboard.isCustomKeyboardVisible());
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int itemId = item.getItemId();
-		if (itemId == R.id.commit) {
+        if (itemId == R.id.action_more_menu) {
+            onPrepareOptionsMenu(item.getSubMenu());
+        } else if (itemId == R.id.commit) {
 			Toast.makeText(NewTransactionActivity.this, "Commit was pressed", Toast.LENGTH_SHORT).show(); //TODO
+        } else if (itemId == R.id.action_hide_keyboard && mCustomKeyboard.isCustomKeyboardVisible()) {
+            mCustomKeyboard.hideCustomKeyboard();
 		}
 		return true;
 	}
