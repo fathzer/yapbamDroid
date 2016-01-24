@@ -5,25 +5,22 @@ import java.util.List;
 
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
 import com.fathzer.android.keyboard.DecimalKeyboard;
-import com.fathzer.android.spinner.UserOnlySpinnerListener;
+import com.fathzer.android.spinner.CustomSpinner;
 
-import net.astesana.android.Log;
 import net.yapbam.android.AbstractYapbamActivity;
 import net.yapbam.android.R;
 import net.yapbam.android.keyboard.AutoHideDecimalKeyboard;
 
 public class TestActivity extends AbstractYapbamActivity {
-
-    private Spinner spinner;
+    private CustomSpinner spinner;
     private Button button;
 
     @Override
@@ -32,7 +29,6 @@ public class TestActivity extends AbstractYapbamActivity {
         DecimalKeyboard mCustomKeyboard = new AutoHideDecimalKeyboard(this, R.id.keyboardview, R.xml.deckbd );
         mCustomKeyboard.registerEditText(R.id.amount);
         addItemsOnSpinner2();
-        addListenerOnButton();
     }
 
     @Override
@@ -57,7 +53,7 @@ public class TestActivity extends AbstractYapbamActivity {
 
     // add items into spinner dynamically
     public void addItemsOnSpinner2() {
-        spinner = (Spinner) findViewById(R.id.spinner2);
+        spinner = (CustomSpinner) findViewById(R.id.spinner2);
         List list = new ArrayList();
         for (int i=1;i<20;i++) {
             list.add("Item " + i);
@@ -65,30 +61,25 @@ public class TestActivity extends AbstractYapbamActivity {
         ArrayAdapter dataAdapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
-        UserOnlySpinnerListener listener = new UserOnlySpinnerListener() {
+        AdapterView.OnItemSelectedListener listener = new AdapterView.OnItemSelectedListener() {
             @Override
-            protected void doSelect(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                Toast.makeText(parentView.getContext(), "Selected: " + parentView.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(parent.getContext(), "Selected: " + parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                //Nothing to do
             }
         };
-        spinner.setOnTouchListener(listener);
         spinner.setOnItemSelectedListener(listener);
     }
 
-    public void addListenerOnButton() {
-        spinner = (Spinner) findViewById(R.id.spinner2);
-        button = (Button) findViewById(R.id.button);
+    public void showSelected(View v) {
+        Toast.makeText(TestActivity.this, "Result: Spinner : " + String.valueOf(spinner.getSelectedItem()), Toast.LENGTH_SHORT).show();
+    }
 
-        button.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(TestActivity.this,
-                        "Result: Spinner : " + String.valueOf(spinner.getSelectedItem()),
-                        Toast.LENGTH_SHORT).show();
-                spinner.setSelection(0);
-            }
-
-        });
+    public void select0(View v) {
+        spinner.setSelection(0, false, ((CheckBox)findViewById(R.id.checkBox)).isChecked());
     }
 }

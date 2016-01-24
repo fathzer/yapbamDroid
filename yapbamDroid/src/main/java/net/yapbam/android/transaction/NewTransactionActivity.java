@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fathzer.android.keyboard.DecimalKeyboard;
-import com.fathzer.android.spinner.UserOnlySpinnerListener;
 
 import net.astesana.android.Log;
 import net.yapbam.android.R;
@@ -75,24 +74,35 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
         DecimalKeyboard mCustomKeyboard = new AutoHideDecimalKeyboard(this, R.id.keyboardview, R.xml.deckbd );
 		mCustomKeyboard.registerEditText(R.id.amount);
 		final Spinner accountSpinner = (Spinner) findViewById(R.id.account);
-        final UserOnlySpinnerListener accountListener = new UserOnlySpinnerListener() {
-            protected void doSelect(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+        final AdapterView.OnItemSelectedListener accountListener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 accountName = getDataManager().getData().getAccount(position).getName();
                 Log.v(this, "set account to "+accountName);
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                //Nothing to do
             }
         };
         accountSpinner.setOnItemSelectedListener(accountListener);
-        accountSpinner.setOnTouchListener(accountListener);
+//        accountSpinner.setOnTouchListener(accountListener);
         final Spinner categorySpinner = (Spinner) findViewById(R.id.category);
-        final UserOnlySpinnerListener categoryListener = new UserOnlySpinnerListener() {
-            protected void doSelect(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+        final AdapterView.OnItemSelectedListener categoryListener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 categoryIndex = position;
                 Log.v(this, "set cat to "+categoryIndex);
             }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                //Nothing to do
+            }
         };
         categorySpinner.setOnItemSelectedListener(categoryListener);
-        categorySpinner.setOnTouchListener(categoryListener);
+//        categorySpinner.setOnTouchListener(categoryListener);
 	}
 
 	/** Fills the account spinner and sets the selected account.

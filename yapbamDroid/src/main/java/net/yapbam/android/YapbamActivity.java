@@ -38,7 +38,7 @@ public class YapbamActivity extends Activity {
 				}
 			}
 		};
-//		findViewById(R.id.button3).setVisibility(SHOW_TEST?View.VISIBLE:View.GONE);
+		findViewById(R.id.button3).setVisibility(SHOW_TEST?View.VISIBLE:View.GONE);
 	}
 
 	public void doTest(View view) {

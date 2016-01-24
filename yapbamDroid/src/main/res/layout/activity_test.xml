@@ -32,7 +32,7 @@
                 android:layout_marginRight="5dp"/>
         </LinearLayout>
 
-        <Spinner
+        <com.fathzer.android.spinner.CustomSpinner
             android:id="@+id/spinner2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -40,11 +40,32 @@
             android:focusable="false"
             android:focusableInTouchMode="false"/>
 
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select 0"
+                android:onClick="select0"/>
+
+            <CheckBox
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="throw events"
+                android:id="@+id/checkBox"
+                />
+        </LinearLayout>
+
         <Button
-            android:id="@+id/button"
+            android:id="@+id/button4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Test" />
+            android:text="Show selected"
+            android:onClick="showSelected"/>
 
     </LinearLayout>
     <!-- NOTE No need to develop a system service for keyboard, there is a standard View for that (well, not completely standard, its in a funny package 'android.inputmethodservice'. -->
