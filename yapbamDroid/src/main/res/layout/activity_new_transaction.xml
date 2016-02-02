@@ -48,7 +48,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:gravity="right"
-                        android:inputType="text"
+                        android:inputType="numberDecimal"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:layout_weight="1" />
 
@@ -119,14 +119,18 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp" />
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/description"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:inputType="textAutoComplete"
+                android:imeOptions="actionNext"
+                android:completionThreshold="1"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <EditText
                 android:id="@+id/comment"
+                android:inputType="text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
@@ -189,8 +193,10 @@
                     android:layout_height="wrap_content"
                     android:text="Number" />
 
-                <EditText
+                <AutoCompleteTextView
                     android:id="@+id/number"
+                    android:inputType="textAutoComplete"
+                    android:imeOptions="actionNext"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"/>
@@ -215,6 +221,7 @@
 
                 <EditText
                     android:id="@+id/statement"
+                    android:inputType="text"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"/>
@@ -229,16 +236,4 @@
         </TableLayout>
 
     </LinearLayout>
-    <!-- NOTE No need to develop a system service for keyboard, there is a standard View for that (well, not completely standard, its in a funny package 'android.inputmethodservice'. -->
-    <!-- NOTE The graphical layout does not know the package ('java.lang.NoClassDefFoundError: Could not initialize class android.inputmethodservice.KeyboardView') so the keyboard is not shown. -->
-
-    <android.inputmethodservice.KeyboardView
-        android:id="@+id/keyboardview"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:visibility="gone" />
-
 </FrameLayout>

@@ -10,11 +10,6 @@
         android:showAsAction="always">
         <menu>
             <item
-                android:id="@+id/action_hide_keyboard"
-                android:orderInCategory="100"
-                android:showAsAction="always"
-                android:title="@string/currency_converter_hide_keyboard"/>
-            <item
                 android:id="@+id/justATest"
                 android:orderInCategory="200"
                 android:showAsAction="always"

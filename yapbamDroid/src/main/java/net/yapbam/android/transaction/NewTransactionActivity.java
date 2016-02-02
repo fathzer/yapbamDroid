@@ -7,21 +7,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.fathzer.android.keyboard.DecimalKeyboard;
-
 import net.astesana.android.Log;
 import net.yapbam.android.R;
 import net.yapbam.android.AbstractYapbamActivity;
 import net.yapbam.android.datamanager.DataManager.State;
 import net.yapbam.android.date.DatePickerFragment;
-import net.yapbam.android.keyboard.AutoHideDecimalKeyboard;
 import net.yapbam.data.Account;
+import net.yapbam.data.Checkbook;
 import net.yapbam.data.GlobalData;
 import net.yapbam.data.Mode;
 import net.yapbam.data.Transaction;
@@ -33,9 +32,16 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class NewTransactionActivity extends AbstractYapbamActivity {
 	//FIXME Not finished
@@ -52,7 +58,6 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
     private String accountName;
     private int categoryIndex;
     private String modeName;
-    private DecimalKeyboard mCustomKeyboard;
 
     public static class DatePicker extends DatePickerFragment {
         private static final String FIELD_ID_KEY = "id"; //NON-NLS
@@ -74,14 +79,14 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.v(this, "onCreate");
 		super.onCreate(savedInstanceState);
-        mCustomKeyboard = new AutoHideDecimalKeyboard(this, R.id.keyboardview, R.xml.deckbd );
-		mCustomKeyboard.registerEditText(R.id.amount);
 		final Spinner accountSpinner = (Spinner) findViewById(R.id.account);
         final AdapterView.OnItemSelectedListener accountListener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 accountName = getDataManager().getData().getAccount(position).getName();
                 Log.v(this, "set account to "+accountName);
+                fillModeSpinner();
+                setPredefinedDescriptions();
             }
 
             @Override
@@ -95,7 +100,7 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 categoryIndex = position;
-                Log.v(this, "set cat to "+categoryIndex);
+                Log.v(this, "set cat to " + categoryIndex);
             }
 
             @Override
@@ -111,6 +116,7 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 modeName = (String) parent.getItemAtPosition(position);
                 Log.v(this, "set mode to "+modeName);
+                setPredefinedNumbers();
             }
 
             @Override
@@ -119,6 +125,17 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
             }
         };
         modeSpinner.setOnItemSelectedListener(modeListener);
+
+        final AutoCompleteTextView number = (AutoCompleteTextView) findViewById(R.id.number);
+        number.setThreshold(1);
+        number.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
+                    number.showDropDown();
+                }
+            }
+        });
 	}
 
 	/** Fills the account spinner and sets the selected account.
@@ -142,7 +159,7 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
         GlobalData data = getDataManager().getData();
         Account account = data.getAccount(accountName);
         List<String> modes = new ArrayList<>(account.getModesNumber());
-        boolean isReceipt = ((CheckBox)findViewById(R.id.receipt)).isChecked();
+        boolean isReceipt = isReceipt();
         int selected = -1;
         for (int i=0;i<account.getModesNumber();i++) {
             Mode mode = account.getMode(i);
@@ -162,6 +179,10 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
             selected = 0;
         }
         spinner.setSelection(selected);
+    }
+
+    private boolean isReceipt() {
+        return ((CheckBox)findViewById(R.id.receipt)).isChecked();
     }
 
     /** Fills the category spinner.
@@ -198,8 +219,13 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
 
             NumberFormat currencyInstance = DecimalFormat.getCurrencyInstance();
             // Currency instance formatter displays the currency symbol, create a new format without this symbol.
-            NumberFormat formatter = new DecimalFormat();
-            formatter.setGroupingUsed(currencyInstance.isGroupingUsed());
+            // Unfortunately that damned evil Google thinks supporting non US locale for its numerical keyboard is not a priority
+            // (see https://code.google.com/p/android/issues/detail?id=2626)
+            // As displaying a custom keyboard in a view where other text input are present is a nightmare,
+            // I have to make with that ugly Google dev toolkit ... and make as every user was form US.
+            // For sure, it's not the first nor the last time US imposes its culture to the whole world ;-)
+            NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US);
+            formatter.setGroupingUsed(false);
             formatter.setMinimumFractionDigits(currencyInstance.getMinimumFractionDigits());
             formatter.setMaximumFractionDigits(currencyInstance.getMaximumFractionDigits());
             formatter.setMinimumIntegerDigits(currencyInstance.getMinimumIntegerDigits());
@@ -241,14 +267,82 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
         fillAccountSpinner();
         fillModeSpinner();
         fillCategorySpinner();
+        setPredefinedDescriptions();
+        setPredefinedNumbers();
 	}
 
-	@Override
+    private void setPredefinedDescriptions() {
+        AutoCompleteTextView description = (AutoCompleteTextView) findViewById(R.id.description);
+        GlobalData data = getDataManager().getData();
+        final String[] predefined = getPredefined(data, data.getAccount(accountName));
+        ArrayAdapter<String> adapter = predefined.length==0?null:new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, predefined);
+        description.setAdapter(adapter);
+    }
+
+    private String[] getPredefined(GlobalData data, Account account) {
+        final long millisPerDay = 24*60*60*1000;
+        final Map<String, Double> map = new HashMap<String, Double>();
+        final long now = System.currentTimeMillis();
+        for (int i = 0; i < data.getTransactionsNumber(); i++) {
+            final Transaction transaction = data.getTransaction(i);
+            final long time = Math.abs(transaction.getDate().getTime() - now) / millisPerDay;
+            double ranking = 2 / Math.sqrt(time + 4);
+            if (!transaction.getAccount().equals(account)) {
+                ranking = ranking / 100;
+            }
+            final String description = transaction.getDescription();
+            final Double current = map.get(description);
+            if (current==null) {
+                map.put(description, ranking);
+            } else {
+                map.put(description, (ranking + current));
+            }
+        }
+        // Sort the map by ranking
+        LinkedList<Map.Entry<String, Double>> list = new LinkedList<Map.Entry<String, Double>>(map.entrySet());
+        Collections.sort(list, new Comparator<Map.Entry<String, Double>>() {
+            @Override
+            public int compare(Map.Entry<String, Double> o1, Map.Entry<String, Double> o2) {
+                return -o1.getValue().compareTo(o2.getValue());
+            }
+        });
+        String[] array = new String[list.size()];
+        Iterator<Map.Entry<String, Double>> iterator = list.iterator();
+        for (int i = 0; i < array.length; i++) {
+            array[i] = iterator.next().getKey();
+        }
+        return array;
+    }
+
+    private void setPredefinedNumbers() {
+        final GlobalData data = getDataManager().getData();
+        final Account account = data.getAccount(accountName);
+        final Mode mode = account.getMode(modeName);
+        final List<String> numbers = new ArrayList<>();
+        if (mode.isUseCheckBook() && !isReceipt()) {
+            for (int i=0;i<account.getCheckbooksNumber();i++) {
+                final Checkbook checkbook = account.getCheckbook(i);
+                if (!checkbook.isEmpty()) {
+                    Log.v(this.getClass().getName(),"add number "+checkbook.getFullNumber(checkbook.getNext()));
+                    numbers.add(checkbook.getFullNumber(checkbook.getNext()));
+                }
+            }
+        }
+        final AutoCompleteTextView number = (AutoCompleteTextView) findViewById(R.id.number);
+        number.setAdapter(numbers.isEmpty()?null:new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, numbers));
+    }
+
+    public void onReceiptClicked(View v) {
+        fillModeSpinner();
+        setPredefinedNumbers();
+    }
+
+    @Override
 	protected void onSaveInstanceState(Bundle bundle) {
 		Log.v(this,"onSaveInstanceState"); //$NON-NLS-1$
 		bundle.putString(ACCOUNT_NAME, accountName);
         bundle.putString(DATE, ((TextView) findViewById(R.id.date)).getText().toString());
-        bundle.putString(VALUE_DATE, ((TextView)findViewById(R.id.valueDate)).getText().toString());
+        bundle.putString(VALUE_DATE, ((TextView) findViewById(R.id.valueDate)).getText().toString());
         bundle.putInt(CATEGORY, categoryIndex);
         bundle.putString(MODE, modeName);
 		super.onSaveInstanceState(bundle);
@@ -264,10 +358,6 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
         modeName = bundle.getString(MODE);
         Log.v(this, "restore account to " + accountName + ", cat to " + categoryIndex + ", mode to " + modeName);
 		super.onRestoreInstanceState(bundle);
-	}
-
-	public void onReceiptClicked(View v) {
-		fillModeSpinner();
 	}
 
     public void onSubtransactions(View v) {
@@ -310,8 +400,6 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        Log.v(this, "Custom keyboard is visible: "+mCustomKeyboard.isCustomKeyboardVisible());
-        menu.findItem(R.id.action_hide_keyboard).setVisible(mCustomKeyboard.isCustomKeyboardVisible());
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -322,9 +410,7 @@ public class NewTransactionActivity extends AbstractYapbamActivity {
             onPrepareOptionsMenu(item.getSubMenu());
         } else if (itemId == R.id.commit) {
 			Toast.makeText(NewTransactionActivity.this, "Commit was pressed", Toast.LENGTH_SHORT).show(); //TODO
-        } else if (itemId == R.id.action_hide_keyboard && mCustomKeyboard.isCustomKeyboardVisible()) {
-            mCustomKeyboard.hideCustomKeyboard();
-		}
+        }
 		return true;
 	}
 }

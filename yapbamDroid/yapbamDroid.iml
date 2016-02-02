@@ -86,8 +86,8 @@
     <orderEntry type="library" exported="" name="javaluator-3.0.1" level="project" />
     <orderEntry type="library" exported="" name="commons-lang3-3.4" level="project" />
     <orderEntry type="library" exported="" name="dropbox-sync-sdk-android" level="project" />
-    <orderEntry type="library" exported="" name="yapbam-commons-1.7.0" level="project" />
     <orderEntry type="library" exported="" name="keyboard-0.0.1" level="project" />
+    <orderEntry type="library" exported="" name="yapbam-commons-1.7.1" level="project" />
     <orderEntry type="library" exported="" name="slf4j-android-1.7.12" level="project" />
     <orderEntry type="library" exported="" name="slf4j-api-1.7.12" level="project" />
     <orderEntry type="library" exported="" name="multispinner-0.0.1" level="project" />

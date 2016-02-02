@@ -1,10 +1,11 @@
+Refactoring :
+Le wiard d'édition doit avoir sa stratégie dans yapbam-commons
+
 Features indispensables :
 Saisie/Edition d'une nouvelle opération :
  - L'icone de validation est beurk !!!
  - Le layout landscape est à faire
- - L'édition des sous-opérations aussi
- - Comme les propositions de saisie.
- - Les claviers se masquent mutuellement
+ - L'édition des sous-opérations aussi (mise à jour date de valeur, mode quand libellé prédéfini, etc).
 Sauvegarde.
 Titre de l'activité d'édition d'opération
 
@@ -18,6 +19,6 @@ Quand le fichier distant passe de "pas de mot de passe" à "avec un mot de passe
 Quand le fichier distant repasse à sans mot de passe, puis à avec mot de passe, le mot de passe n'est pas redemandé.
 
 Améliorations :
-La sélection dans les listes avec des backgrounds de couleur alternées n'entraine pas de "hightlight" de la position sélectionné.
+La sélection dans les listes avec des backgrounds de couleurs alternées n'entraine pas de "hightlight" de la position sélectionné.
 Possibilité de sauvegarder le mot de passe 
 Cacher le clavier avec un btn sur le clavier.
